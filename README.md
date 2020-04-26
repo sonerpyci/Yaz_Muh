@@ -1,2 +1,2 @@
 # Yaz_Muh
-Yazilim Muhendisligi Proje
+Yazilim Muhendisligi Proje / Eclipse üzerinde yazılmaktadır
