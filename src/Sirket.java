@@ -30,6 +30,12 @@ public class Sirket {
 	}
 	public void removeWorker(Calisan c) {
 		calisanlar.remove(c);
+		
+		for(Proje p :projeler) {
+			if(p.getCalisanlar().contains(c)) {
+				p.removeWorker(c);
+			}
+		}
 	}
 	
 	public void addProject(Proje o) {

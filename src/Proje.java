@@ -45,6 +45,7 @@ public class Proje {
 			if(programci<maxProgramci) {
 				programci++;
 				calisanlar.add(calisan);
+				System.out.println("Çalýþan Baþarýyla Eklendi");
 				return true;
 			}
 			else {
@@ -59,6 +60,7 @@ public class Proje {
 			if(analist<maxAnalist) {
 				analist++;
 				calisanlar.add(calisan);
+				System.out.println("Çalýþan Baþarýyla Eklendi");
 				return true;
 			}
 			else {
@@ -71,6 +73,7 @@ public class Proje {
 			if(tasarimci<maxTasarimci) {
 				tasarimci++;
 				calisanlar.add(calisan);
+				System.out.println("Çalýþan Baþarýyla Eklendi");
 				return true;
 			}
 			else {
@@ -78,6 +81,7 @@ public class Proje {
 				return false;
 			}
 		}
+		
 		
 		return false;
 		
