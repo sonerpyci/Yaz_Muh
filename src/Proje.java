@@ -15,13 +15,9 @@ public class Proje {
 	private int maxAnalist;
 	private int maxProgramci;
 	private int maxTasarimci;
-	private Yonetici yonetici;
+	private Calisan yonetici;
 	private boolean status;//Active True ,
 	
-	
-
-	
-
 
 	public Proje(String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
 			int maxProgramci, int maxTasarimci, Yonetici yonetici) {
@@ -35,17 +31,35 @@ public class Proje {
 		this.maxAnalist = maxAnalist;
 		this.maxProgramci = maxProgramci;
 		this.maxTasarimci = maxTasarimci;
+		yonetici.setProjectName(projectName);
 		this.yonetici = yonetici;
 	}
+	
+	public Proje(String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
+			int maxProgramci, int maxTasarimci, Calisan yonetici) {
+		super();
+		this.calisanlar = new ArrayList<Calisan>();
+		calisanlar.add(yonetici);
+		this.projectName = projectName;
+		this.minAnalist = minAnalist;
+		this.minProgramci = minProgramci;
+		this.minTasarimci = minTasarimci;
+		this.maxAnalist = maxAnalist;
+		this.maxProgramci = maxProgramci;
+		this.maxTasarimci = maxTasarimci;
+		yonetici.setProjectName(projectName);
+		this.yonetici = yonetici;
 
+	}
 
 	public boolean addWorker(Calisan calisan) {
 		
 		if (calisan instanceof Programci) {
 			if(programci<maxProgramci) {
 				programci++;
+				calisan.setProjectName(this.projectName);
 				calisanlar.add(calisan);
-				System.out.println("Çalýþan Baþarýyla Eklendi");
+				System.out.println("Çalýþan Baþarýyla Eklendi" + programci);
 				return true;
 			}
 			else {
@@ -53,12 +67,11 @@ public class Proje {
 				return false;
 			}
 		}
-		
-		
-		
+
 		if (calisan instanceof Analist) {
 			if(analist<maxAnalist) {
 				analist++;
+				calisan.setProjectName(this.projectName);
 				calisanlar.add(calisan);
 				System.out.println("Çalýþan Baþarýyla Eklendi");
 				return true;
@@ -72,6 +85,7 @@ public class Proje {
 		if (calisan instanceof Tasarimci) {
 			if(tasarimci<maxTasarimci) {
 				tasarimci++;
+				calisan.setProjectName(this.projectName);
 				calisanlar.add(calisan);
 				System.out.println("Çalýþan Baþarýyla Eklendi");
 				return true;
@@ -81,15 +95,13 @@ public class Proje {
 				return false;
 			}
 		}
-		
-		
 		return false;
-		
 	}
 	
 	
 	public boolean removeWorker(Calisan calisan) {
 		if (calisan instanceof Programci) {
+			System.out.println("Programci Siliniyor");
 			if(programci>minProgramci) {
 				programci--;
 				calisanlar.remove(calisan);
@@ -102,9 +114,7 @@ public class Proje {
 				
 			}
 		}
-		
-		
-		
+	
 		if (calisan instanceof Analist) {
 			if(analist>minAnalist) {
 				analist--;
@@ -163,13 +173,106 @@ public class Proje {
 		this.calisanlar = calisanlar;
 	}
 
-	public Yonetici getYonetici() {
+	public Calisan getYonetici() {
 		return yonetici;
 	}
+	
 	public void setYonetici(Yonetici yonetici) {
 		this.yonetici = yonetici;
 	}
 
+
+	public int getProgramci() {
+		return programci;
+	}
 	
-	
+	public boolean getStatus() {
+		return status;
+	}
+
+
+	public void setProgramci(int programci) {
+		this.programci = programci;
+	}
+
+
+	public int getTasarimci() {
+		return tasarimci;
+	}
+
+
+	public void setTasarimci(int tasarimci) {
+		this.tasarimci = tasarimci;
+	}
+
+
+	public int getAnalist() {
+		return analist;
+	}
+
+
+	public void setAnalist(int analist) {
+		this.analist = analist;
+	}
+
+
+	public int getMinAnalist() {
+		return minAnalist;
+	}
+
+
+	public void setMinAnalist(int minAnalist) {
+		this.minAnalist = minAnalist;
+	}
+
+
+	public int getMinProgramci() {
+		return minProgramci;
+	}
+
+
+	public void setMinProgramci(int minProgramci) {
+		this.minProgramci = minProgramci;
+	}
+
+
+	public int getMinTasarimci() {
+		return minTasarimci;
+	}
+
+
+	public void setMinTasarimci(int minTasarimci) {
+		this.minTasarimci = minTasarimci;
+	}
+
+
+	public int getMaxAnalist() {
+		return maxAnalist;
+	}
+
+
+	public void setMaxAnalist(int maxAnalist) {
+		this.maxAnalist = maxAnalist;
+	}
+
+
+	public int getMaxProgramci() {
+		return maxProgramci;
+	}
+
+
+	public void setMaxProgramci(int maxProgramci) {
+		this.maxProgramci = maxProgramci;
+	}
+
+
+	public int getMaxTasarimci() {
+		return maxTasarimci;
+	}
+
+
+	public void setMaxTasarimci(int maxTasarimci) {
+		this.maxTasarimci = maxTasarimci;
+	}
+
 }

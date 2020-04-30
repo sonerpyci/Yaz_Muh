@@ -4,9 +4,12 @@ public class Yonetici extends Calisan {
 	private Proje proje;
 	
 	
-	public Yonetici(int id ,String name,String salary) {
-		super(id,name,salary);
-		
+	public Yonetici(String name,int salary) {
+		super(name,salary);		
+	}
+	
+	public Yonetici() {
+		super();
 	}
 
 

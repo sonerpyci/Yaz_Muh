@@ -5,35 +5,56 @@ public class Sirket {
 	private String companyName;
 	private ArrayList<Proje> projeler;
 	private ArrayList<Calisan> calisanlar;
+	private int idCounter;
+	
 	public Sirket(String companyName) {
 		super();
 		this.companyName = companyName;
 		this.projeler = new ArrayList<Proje>();
 		this.calisanlar = new ArrayList<Calisan>();
+		this.idCounter=0;
 	}
 	
 	
-	
 	public void addWorker(Calisan c , Proje p) {
+		idCounter++;
+		c.setId(idCounter);
+		c.setProjectName(p.getProjectName());
 		calisanlar.add(c);
 		p.addWorker(c);
 	}
 	
 	public void addWorker(Calisan c ) {
+		idCounter++;
+		c.setId(idCounter);
 		calisanlar.add(c);
 		for(Proje p : projeler) {
-			boolean control =p.addWorker(c);
-			if(control)
+			boolean control = p.addWorker(c);
+			if(control && c.getStatus()==false) {
+				c.setProjectName(p.getProjectName());
+				c.setStatus(true);
 				return;
-			
+			}
 		}
 	}
+	
+	public void addEmptyWorker ( Calisan c ) {
+		for(Proje p : projeler) {
+			boolean control = p.addWorker(c);
+			if(control && c.getStatus()==false) {
+				c.setProjectName(p.getProjectName());
+				c.setStatus(true);
+				return;
+			}
+		}
+	}
+	
 	public void removeWorker(Calisan c) {
 		calisanlar.remove(c);
-		
 		for(Proje p :projeler) {
 			if(p.getCalisanlar().contains(c)) {
 				p.removeWorker(c);
+				System.out.println("Remove Workere'a girdi");
 			}
 		}
 	}
@@ -43,8 +64,13 @@ public class Sirket {
 	}
 	
 	public void removeProject(Proje o) {
+		for (Calisan c : o.getCalisanlar() ) {
+			addEmptyWorker(c);
+			o.removeWorker(c);
+		}
 		projeler.remove(o);
 	}
+	
 	public String getCompanyName() {
 		return companyName;
 	}
