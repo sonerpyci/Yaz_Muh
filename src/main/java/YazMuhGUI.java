@@ -206,18 +206,65 @@ public class YazMuhGUI extends JFrame {
         saveProjectsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DefaultTableModel tableModel = (DefaultTableModel)projectsTable.getModel();
-                //projectsTable.get
+                try {
+                    DefaultTableModel tableModel = (DefaultTableModel)projectsTable.getModel();
+                    int row = projectsTable.getSelectedRow();
+                    int id = Integer.parseInt(tableModel.getValueAt(row, 0).toString());
+                    int programci = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
+                    int tasarimci = Integer.parseInt(tableModel.getValueAt(row, 2).toString());
+                    int analist = Integer.parseInt(tableModel.getValueAt(row, 3).toString());
+                    int minAnalist = Integer.parseInt(tableModel.getValueAt(row, 4).toString());
+                    int minProgramci = Integer.parseInt(tableModel.getValueAt(row, 5).toString());
+                    int minTasarimci = Integer.parseInt(tableModel.getValueAt(row, 6).toString());
+                    int maxAnalist = Integer.parseInt(tableModel.getValueAt(row, 7).toString());
+                    int maxProgramci = Integer.parseInt(tableModel.getValueAt(row, 8).toString());
+                    int maxTasarimci = Integer.parseInt(tableModel.getValueAt(row, 9).toString());
+                    int yoneticiId = Integer.parseInt(tableModel.getValueAt(row, 10).toString());
+
+                    Boolean status = Boolean.parseBoolean(tableModel.getValueAt(row, 11).toString());
+                    String projectName = tableModel.getValueAt(row, 12).toString();
+
+                    /*  update project by id and values above  */
+                    //  updateProjectById(bla bla);
+                    /*  update project by id and values above  */
 
 
+                    // this line for refresh the view state
+                    projectsTable.setModel(buildTableModel(database.getAndReturnProjectsFromDatabase()));
 
 
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         });
         saveStaffButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    DefaultTableModel tableModel = (DefaultTableModel)staffsTable.getModel();
+                    int row = staffsTable.getSelectedRow();
+                    int id = Integer.parseInt(tableModel.getValueAt(row, 0).toString());
+                    String salary = tableModel.getValueAt(row, 1).toString();
+                    Boolean status = Boolean.parseBoolean(tableModel.getValueAt(row, 2).toString());
+                    String name = tableModel.getValueAt(row, 3).toString();
+                    String workerType = tableModel.getValueAt(row, 4).toString();
+                    String projectName = tableModel.getValueAt(row, 5).toString();
 
+
+
+                    /*  update calisan by id and values above  */
+                    //  updateCalisanById(id, other values ..., bla bla);
+                    /*  update project by id and values above  */
+
+
+                    // this line for refresh the view state
+                    staffsTable.setModel(buildTableModel(database.getAndReturnCalisanlarFromDatabase()));
+
+
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         });
     }
