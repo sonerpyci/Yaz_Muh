@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="YazMuhGUI">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="35" y="18" width="1007" height="605"/>
+    </constraints>
+    <properties>
+      <background color="-4473925"/>
+      <enabled value="false"/>
+      <foreground color="-16777216"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="80b52" binding="leftPanel" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="10" left="10" bottom="10" right="10"/>
+        <constraints>
+          <grid row="0" column="0" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="1366"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-14462631"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="2b80b" class="javax.swing.JButton" binding="projectsButton">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="-1" height="50"/>
+                <maximum-size width="-1" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <margin top="0" left="0" bottom="0" right="0"/>
+              <text value="Projeler"/>
+            </properties>
+          </component>
+          <component id="19cc" class="javax.swing.JButton" binding="staffsButton">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="-1" height="50"/>
+                <maximum-size width="-1" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value="Çalışanlar"/>
+            </properties>
+          </component>
+          <vspacer id="5c1d7">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
+          <vspacer id="e64b7">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
+          <vspacer id="98a77">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
+        </children>
+      </grid>
+      <hspacer id="a750c">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <grid id="3cc3d" binding="rightPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="1366"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-11315367"/>
+          <enabled value="true"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="6f58e" binding="projectsPanel" layout-manager="GridLayoutManager" row-count="4" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-12693927"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="c9c64" class="javax.swing.JButton" binding="saveProjectsButton">
+                <constraints>
+                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Değişiklikleri Uygula"/>
+                </properties>
+              </component>
+              <component id="84237" class="javax.swing.JButton" binding="refreshProjectsButton">
+                <constraints>
+                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Yenile"/>
+                </properties>
+              </component>
+              <component id="8a626" class="javax.swing.JLabel" binding="projectsLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font size="22" style="3"/>
+                  <foreground color="-1118482"/>
+                  <text value="Projeler"/>
+                </properties>
+              </component>
+              <hspacer id="42fce">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <hspacer id="6098f">
+                <constraints>
+                  <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <scrollpane id="89a9b" binding="projectsScrollPane">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="9" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="916b4" class="javax.swing.JTable" binding="projectsTable">
+                    <constraints/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                      <background color="-14133671"/>
+                      <cellSelectionEnabled value="false"/>
+                      <columnSelectionAllowed value="false"/>
+                      <foreground color="-1118482"/>
+                      <name value="Projeler"/>
+                      <rowSelectionAllowed value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <component id="119b8" class="javax.swing.JButton" binding="newProjectButton">
+                <constraints>
+                  <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Yeni Proje"/>
+                </properties>
+              </component>
+              <component id="7b319" class="javax.swing.JButton" binding="deleteProjectsButton">
+                <constraints>
+                  <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Sil"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="1912a" binding="welcomePanel" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-12693927"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="62752" class="javax.swing.JLabel" binding="welcomeLabel">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <foreground color="-1118482"/>
+                  <text value="Surum v0.0.1"/>
+                </properties>
+              </component>
+              <vspacer id="2d526">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <component id="a3110" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-4473925"/>
+                  <font size="20" style="1"/>
+                  <foreground color="-1118482"/>
+                  <iconTextGap value="4"/>
+                  <text value="Hosgeldiniz"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="8da8e" binding="staffsPanel" layout-manager="GridLayoutManager" row-count="4" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-12693927"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <hspacer id="ae049">
+                <constraints>
+                  <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <scrollpane id="11e7b" binding="staffsScrollPane">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="9" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font size="20" style="3"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <component id="79a6c" class="javax.swing.JTable" binding="staffsTable">
+                    <constraints/>
+                    <properties>
+                      <autoCreateRowSorter value="true"/>
+                      <background color="-14133671"/>
+                      <cellSelectionEnabled value="false"/>
+                      <columnSelectionAllowed value="false"/>
+                      <foreground color="-1118482"/>
+                      <name value="Projeler"/>
+                      <rowSelectionAllowed value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <component id="6f922" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font size="22" style="3"/>
+                  <foreground color="-1118482"/>
+                  <text value="Çalışanlar"/>
+                </properties>
+              </component>
+              <component id="6885d" class="javax.swing.JButton" binding="refreshStaffButton">
+                <constraints>
+                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Yenile"/>
+                </properties>
+              </component>
+              <hspacer id="752b9">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="1c136" class="javax.swing.JButton" binding="saveStaffButton">
+                <constraints>
+                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Değişiklikleri Uygula"/>
+                </properties>
+              </component>
+              <component id="b46a2" class="javax.swing.JButton" binding="newStaffButton">
+                <constraints>
+                  <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <margin top="0" left="0" bottom="0" right="0"/>
+                  <text value="Yeni Çalışan"/>
+                </properties>
+              </component>
+              <component id="f0009" class="javax.swing.JButton" binding="deleteStaffButton">
+                <constraints>
+                  <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Sil"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

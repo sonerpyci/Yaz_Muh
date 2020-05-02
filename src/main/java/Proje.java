@@ -4,6 +4,7 @@ public class Proje {
 	private String projectName;
 	private ArrayList<Calisan> calisanlar;
 
+	private int id;
 	private int programci=0;
 	private int tasarimci=0;
 	private int analist=0;
@@ -19,7 +20,7 @@ public class Proje {
 	private boolean status;//Active True ,
 	
 
-	public Proje(String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
+	public Proje(int id, String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
 			int maxProgramci, int maxTasarimci, Yonetici yonetici) {
 		super();
 		this.calisanlar = new ArrayList<Calisan>();
@@ -35,7 +36,7 @@ public class Proje {
 		this.yonetici = yonetici;
 	}
 	
-	public Proje(String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
+	public Proje(int id, String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
 			int maxProgramci, int maxTasarimci, Calisan yonetici) {
 		super();
 		this.calisanlar = new ArrayList<Calisan>();
@@ -58,6 +59,7 @@ public class Proje {
 			if(programci<maxProgramci) {
 				programci++;
 				calisan.setProjectName(this.projectName);
+				calisan.setProjectId(this.id);
 				calisanlar.add(calisan);
 				System.out.println("Çalýþan Baþarýyla Eklendi" + programci);
 				return true;
@@ -72,6 +74,7 @@ public class Proje {
 			if(analist<maxAnalist) {
 				analist++;
 				calisan.setProjectName(this.projectName);
+				calisan.setProjectId(this.id);
 				calisanlar.add(calisan);
 				System.out.println("Çalýþan Baþarýyla Eklendi");
 				return true;
@@ -86,12 +89,13 @@ public class Proje {
 			if(tasarimci<maxTasarimci) {
 				tasarimci++;
 				calisan.setProjectName(this.projectName);
+				calisan.setProjectId(this.id);
 				calisanlar.add(calisan);
-				System.out.println("Çalýþan Baþarýyla Eklendi");
+				System.out.println("Çal??an Ba?ar?yla Eklendi");
 				return true;
 			}
 			else {
-				System.out.println("Projede Maximum Sayýda Tasarimci Bulunmakta");
+				System.out.println("Projede Maximum Say?da Tasarimci Bulunmakta");
 				return false;
 			}
 		}
@@ -109,7 +113,7 @@ public class Proje {
 				
 			}
 			else {
-				System.out.println("Projede Minimum Sayýda Programci Bulunmakta");
+				System.out.println("Projede Minimum Say?da Programci Bulunmakta");
 				return false;
 				
 			}
@@ -123,7 +127,7 @@ public class Proje {
 				
 			}
 			else {
-				System.out.println("Projede Minimum Sayýda Analist Bulunmakta");
+				System.out.println("Projede Minimum Say?da Analist Bulunmakta");
 				return false;
 			}
 		}
@@ -136,7 +140,7 @@ public class Proje {
 				
 			}
 			else {
-				System.out.println("Projede Minimum Sayýda Tasarimci Bulunmakta");
+				System.out.println("Projede Minimum Say?da Tasarimci Bulunmakta");
 				return false;
 				
 			}
@@ -158,6 +162,13 @@ public class Proje {
 			}
 		}
 		
+	}
+
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getProjectName() {

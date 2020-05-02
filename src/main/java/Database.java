@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
 
-
 public class Database {
 	
 	Connection conn;
@@ -67,17 +66,17 @@ public class Database {
     
     public void insertCalisan(Calisan calisan)
     {
-    	String SQL = "INSERT INTO calisanlar(id,salary,status,name,worker_type,project_name) "
-                + "VALUES(?,?,?,?,?,?)";
+    	String SQL = "INSERT INTO calisanlar(salary,status,name,worker_type,project_name) "
+                + "VALUES(?,?,?,?,?)";
     	String worker_type = new String();
         try (
                 
                 PreparedStatement statement = conn.prepareStatement(SQL);) {
 
-                statement.setInt(1, calisan.getId() );
-                statement.setInt(2, calisan.getSalary());
-                statement.setBoolean(3, calisan.getStatus());
-                statement.setString(4, calisan.getName());
+                //statement.setInt(1, calisan.getId() );
+                statement.setInt(1, calisan.getSalary());
+                statement.setBoolean(2, calisan.getStatus());
+                statement.setString(3, calisan.getName());
                 
                 if (calisan instanceof Programci) {
                 	worker_type="programci";
@@ -91,8 +90,8 @@ public class Database {
                 if (calisan instanceof Yonetici) {
                 	worker_type="yonetici";
                 }
-                statement.setString(5, worker_type);
-                statement.setString(6, calisan.getProjectName());
+                statement.setString(4, worker_type);
+                statement.setString(5, calisan.getProjectName());
 
                 statement.addBatch();
 
@@ -113,8 +112,9 @@ public class Database {
 		try { 
 			 Statement stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
-			while(rs.next()) { 
-		    	 int programci = rs.getInt("programci"); 
+			while(rs.next()) {
+				 int id = rs.getInt("id");
+				 int programci = rs.getInt("programci");
 		    	 int tasarimci = rs.getInt("tasarimci");
 		    	 int analist = rs.getInt("tasarimci");
 		    	 
@@ -135,7 +135,8 @@ public class Database {
 		    			 temp = (Yonetici)c;
 		    		 }
 		    	 }
-		    	 temp_project = new Proje(project_name,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,temp);
+		    	 temp_project = new Proje(id, project_name,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,temp);
+		    	 //temp_project.setId(id);
 		    	 calisanlar = sirket.getCalisanlar();
 		    	/* if (temp_project!=null) {
 		    		 for ( Calisan c : calisanlar ) {
@@ -151,6 +152,23 @@ public class Database {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+    }
+
+
+    public ResultSet getAndReturnProjectsFromDatabase() {
+    	Proje temp_project ;
+    	String sql = "SELECT * FROM projeler";
+    	ResultSet rs;
+    	Calisan temp= new Yonetici();
+		try {
+			Statement stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
     }
     
@@ -198,13 +216,35 @@ public class Database {
 			e.printStackTrace();
 		}
     }
+
+	public ResultSet getAndReturnCalisanlarFromDatabase() {
+		Calisan temp_calisan;
+		String sql = "SELECT * FROM calisanlar";
+		ResultSet rs;
+		Programci temp_programci;
+		Analist temp_analist;
+		Tasarimci temp_tasarimci;
+		Yonetici temp_yonetici;
+		calisanlar.clear();
+		try {
+			Statement stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			return rs;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
     
     public void deleteCalisanFromDatabase(int calisan_id) {
     	Calisan temp=null;
-    	String projeAdi ="?";
+    	//String projeAdi ="?";
+    	int projectId = -1;
     	for (Calisan c : sirket.getCalisanlar() ) {
     		if (c.getId()==calisan_id) {
-    			projeAdi=c.getProjectName();
+    			//projeAdi=c.getProjectName();
+				projectId=c.getProjectId();
     			temp = c;
     		}
     	}
@@ -214,7 +254,9 @@ public class Database {
             PreparedStatement pstmt = conn.prepareStatement(SQL)) {
             pstmt.setInt(1, calisan_id);
             pstmt.executeUpdate();
-            updateProject(projeAdi);
+            //updateProject(projeAdi);
+			if (projectId > -1)
+            	updateProject(projectId);
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -222,30 +264,36 @@ public class Database {
 	
     }
     
-    public void deleteProjectFromDatabase(String projeAdi) {
+    public void deleteProjectFromDatabase(int projeId) {
     	getProjectsFromDatabase();
     	getCalisanlarFromDatabase();
-    	String SQL = "DELETE FROM projeler where project_name=?";
+
+    	String SQL = "DELETE FROM projeler where id=?";
     	String sql2 = "UPDATE calisanlar set project_name = null where project_name=?";
     	Proje temp = null;
+		String projeAdi ="?";
     	for (Proje p : sirket.getProjeler()) {
-    		if (p.getProjectName().compareToIgnoreCase(projeAdi)==0) {
-    			temp = p;
+    		if (p.getId() == projeId) {
+				temp = p;
+				System.out.println("temp project : ");
+				System.out.println(temp);
+				projeAdi = p.getProjectName();
     			break;
     		}
     	}
 		try (
-                PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+			PreparedStatement pstmt = conn.prepareStatement(SQL)) {
 
-            pstmt.setString(1, projeAdi);
+            pstmt.setInt(1, projeId);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
 		sirket.removeProject(temp);
-    	try (Connection conn = this.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql2)) {
+    	try (
+			PreparedStatement pstmt = conn.prepareStatement(sql2)) {
 
             pstmt.setString(1, projeAdi);
             pstmt.executeUpdate();
@@ -265,7 +313,7 @@ public class Database {
     	}
     	
     	for (Proje p : sirket.getProjeler()) {
-    		updateProject(p.getProjectName());
+    		updateProject(p.getId());
     	}
     	ArrayList<Calisan> temp_calisanlar = new ArrayList<Calisan>();
     	for (Calisan c : calisanlar ) {
@@ -281,12 +329,12 @@ public class Database {
     	getProjectsFromDatabase();
     }
     
-    public void updateProject(String projectName) {
+    public void updateProject(int projectId) {
     	String SQL = "UPDATE projeler SET programci = ?, tasarimci = ?, analist = ? WHERE project_name =?";
     	Proje temp = null ;
     	for (Proje p : sirket.getProjeler()) {
 			System.out.println(p.getProjectName());
-			if (p.getProjectName().compareToIgnoreCase(projectName)==0) {
+			if (p.getId() == projectId) {
 				temp = p;	
 			}
 		}	
@@ -299,7 +347,7 @@ public class Database {
                 statement.setInt(1, temp.getProgramci());
                 statement.setInt(2, temp.getTasarimci());
                 statement.setInt(3, temp.getAnalist());
-                statement.setString(4, projectName);
+                statement.setString(4, temp.getProjectName());
                 statement.executeUpdate();
     			}
                 
@@ -351,14 +399,14 @@ public class Database {
         Yonetici y = new Yonetici( "oguz", 4500);
         Yonetici y1 = new Yonetici("memo",3);
         Yonetici y2 = new Yonetici("yonetici",4);
-        Proje proje= new Proje("ytu", 0, 0, 0, 3, 3, 3, y);
-        Proje proje2= new Proje("itu", 0, 0, 0, 3, 3, 3, y1);
-        Proje proje3= new Proje("odtu", 0, 0, 0, 3, 3, 3, y2);
-        
+        Proje proje= new Proje(app.getSirket().getProjeler().size() +1 , "ytu", 0, 0, 0, 3, 3, 3, y);
+        Proje proje2= new Proje(app.getSirket().getProjeler().size() +1 , "itu", 0, 0, 0, 3, 3, 3, y1);
+        Proje proje3= new Proje(app.getSirket().getProjeler().size() +1, "odtu", 0, 0, 0, 3, 3, 3, y2);
+
         proje.setStatus(true);
         proje2.setStatus(true);
         proje3.setStatus(true);
-     /* app.getSirket().addProject(proje);
+        app.getSirket().addProject(proje);
         app.getSirket().addProject(proje2);
         app.getSirket().addProject(proje3);
         app.getSirket().addWorker(p);
@@ -370,7 +418,7 @@ public class Database {
 
         app.insertProject(proje); 
         app.insertProject(proje2);
-        app.insertProject(proje3);  */
-        app.deleteProjectFromDatabase(proje.getProjectName());
+        app.insertProject(proje3);
+        //app.deleteProjectFromDatabase(proje.getProjectName());
     }
 }

@@ -64,10 +64,17 @@ public class Sirket {
 	}
 	
 	public void removeProject(Proje o) {
-		for (Calisan c : o.getCalisanlar() ) {
+		ArrayList<Calisan> calisanlar = o.getCalisanlar();
+		for(int i = 0; i < calisanlar.size(); i++) {
+
+			Calisan c = calisanlar.get(i);
 			addEmptyWorker(c);
 			o.removeWorker(c);
 		}
+		/*for (Calisan c : o.getCalisanlar() ) { // foreach concurrent
+			addEmptyWorker(c);
+			o.removeWorker(c);
+		}*/
 		projeler.remove(o);
 	}
 	
