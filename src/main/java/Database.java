@@ -31,8 +31,8 @@ public class Database {
 	public void insertProject(Proje proje)
     {
 		
-    	String SQL = "INSERT INTO projeler(project_name,programci,tasarimci,analist,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,yonetici_id,status) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+    	String SQL = "INSERT INTO projeler(project_name,programci,tasarimci,analist,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,yonetici_id,status,id) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try (
                
                 PreparedStatement statement = conn.prepareStatement(SQL);) {
@@ -49,12 +49,13 @@ public class Database {
                 statement.setInt(10, proje.getMaxTasarimci());
                 statement.setInt(11, proje.getYonetici().getId());
                 statement.setBoolean(12, proje.getStatus());
+				statement.setInt(13, proje.getId());
                 statement.addBatch();
 
                 statement.executeBatch();
                 
                 for ( Calisan c : proje.getCalisanlar()) {
-                	insertCalisan(c);
+                	insertCalisan(c.getId(),c);
                 }
                 
             
@@ -64,10 +65,10 @@ public class Database {
  
     }
     
-    public void insertCalisan(Calisan calisan)
+    public void insertCalisan(int id,Calisan calisan)
     {
-    	String SQL = "INSERT INTO calisanlar(salary,status,name,worker_type,project_name) "
-                + "VALUES(?,?,?,?,?)";
+    	String SQL = "INSERT INTO calisanlar(salary,status,name,worker_type,project_name,id) "
+                + "VALUES(?,?,?,?,?,?)";
     	String worker_type = new String();
         try (
                 
@@ -92,6 +93,7 @@ public class Database {
                 }
                 statement.setString(4, worker_type);
                 statement.setString(5, calisan.getProjectName());
+                statement.setInt(6,id);
 
                 statement.addBatch();
 
@@ -127,6 +129,7 @@ public class Database {
 		    	 int max_tasarimci = rs.getInt("max_tasarimci");
 		    	 int yonetici_id = rs.getInt("yonetici_id");
 		    	 boolean status = rs.getBoolean("status");
+		    	 //int id =rs.getInt("id");
 		    	 String project_name = rs.getString("project_name");
 		    	 System.out.println(project_name);
 		    	 calisanlar = sirket.getCalisanlar();
@@ -194,18 +197,22 @@ public class Database {
 		    	 
 		    	 if (worker_type.compareToIgnoreCase("programci")==0) {
 		    		 temp_programci = new Programci(name, salary);
+		    		 temp_programci.setId(id);
 		    		 calisanlar.add(temp_programci);
 		    	 }
 		    	 if (worker_type.compareToIgnoreCase("analist")==0) {
 		    		 temp_analist = new Analist(name,salary);
+		    		 temp_analist.setId(id);
 		    		 calisanlar.add(temp_analist);
 		    	 }
 		    	 if (worker_type.compareToIgnoreCase("tasarimci")==0) {
 		    		 temp_tasarimci = new Tasarimci(name,salary);
+		    		 temp_tasarimci.setId(id);
 		    		 calisanlar.add(temp_tasarimci);
 		    	 }
 		    	 if (worker_type.compareToIgnoreCase("yonetici")==0) {
 		    		 temp_yonetici = new Yonetici(name,salary);
+		    		 temp_yonetici.setId(id);
 		    		 calisanlar.add(temp_yonetici);
 		    	 }
 	    		 sirket.setCalisanlar(calisanlar);
@@ -328,7 +335,111 @@ public class Database {
     	getCalisanlarFromDatabase();
     	getProjectsFromDatabase();
     }
-    
+
+
+    public void updateProjectById(Proje p){
+
+/* Proje ekleme ekranından verilen değişkenlerle bir Proje nesnesi oluşturulması gerekiyor.Oluşturulan Proje bu methoda gönderilince varsa update yoksa insert işlemi
+yapacak.
+ */
+		int id = p.getId();
+		getProjectsFromDatabase();
+		ArrayList<Proje> temp=sirket.getProjeler();
+		for(Proje s : temp){
+
+			if(s.getId()==id){
+				System.out.println("Update Ediliyor");
+				updateAllProject(p);
+
+				return;
+			}
+		}
+		System.out.println("İnsert İşlemi");
+		insertProject(p);
+
+		}
+		public void updateCalisan(int id ,Calisan temp){
+			//int id=temp.getId();
+			String SQL = "UPDATE calisanlar SET salary=?,status=?,name=?,project_name=? ,project_id=?  WHERE id =?";
+
+
+			try (
+
+					PreparedStatement statement = conn.prepareStatement(SQL);
+			) {
+				System.out.println(temp.getName());
+
+				if (temp != null) {
+					statement.setInt(1, temp.getSalary());
+					statement.setBoolean(2, temp.getStatus());
+					statement.setString(3, temp.getName());
+					statement.setString(4, temp.getProjectName());
+					statement.setInt(5, temp.getProjectId());
+					statement.setInt(6,id);
+					System.out.println(statement.toString());
+					statement.executeUpdate();
+				}
+
+
+			} catch (SQLException ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
+		public void updateCalisanById(int id ,Calisan p){
+			// Update veya insert işlemi için Calisanin idsi ve Calisan Formundan Elde edilen bilgilerle oluşturulmuş çalışan nesnesi fonksiyona gönderililir verilen id'de çalışan varsa
+			//update eder yoksa insert eder
+			getProjectsFromDatabase();
+			getCalisanlarFromDatabase();
+			ArrayList<Calisan> temp=sirket.getCalisanlar();
+			for(Calisan s : temp){
+				System.out.println("Calisan id "+s.getId());
+				if(s.getId()==id){
+					System.out.println("Update Ediliyor");
+					updateCalisan(id,p);
+
+					return;
+				}
+			}
+			System.out.println("İnsert İşlemi");
+			insertCalisan(id,p);
+	}
+
+
+	public void updateAllProject(Proje temp){
+			int id=temp.getId();
+			String SQL = "UPDATE projeler SET programci = ?, tasarimci = ?, analist = ?,project_name=?  ,min_analist=?, min_programci=?, min_tasarimci=?, max_analist=?,max_programci=?,max_tasarimci=?,yonetici_id=?,status=?  WHERE id =?";
+
+
+			try (
+
+					PreparedStatement statement = conn.prepareStatement(SQL);
+			) {
+				System.out.println(temp.getProjectName());
+
+				if (temp != null) {
+					statement.setInt(1, temp.getProgramci());
+					statement.setInt(2, temp.getTasarimci());
+					statement.setInt(3, temp.getAnalist());
+					statement.setString(4, temp.getProjectName());
+					statement.setInt(5, temp.getMinAnalist());
+					statement.setInt(6, temp.getMinProgramci());
+					statement.setInt(7, temp.getMinTasarimci());
+					statement.setInt(8, temp.getMaxAnalist());
+					statement.setInt(9, temp.getMaxProgramci());
+					statement.setInt(10, temp.getMaxTasarimci());
+					statement.setInt(11,temp.getYonetici().getId());
+					statement.setBoolean(12,temp.getStatus());
+					statement.setInt(13,id);
+					statement.executeUpdate();
+				}
+
+
+			} catch (SQLException ex) {
+				System.out.println(ex.getMessage());
+			}
+
+		}
+
     public void updateProject(int projectId) {
     	String SQL = "UPDATE projeler SET programci = ?, tasarimci = ?, analist = ? WHERE project_name =?";
     	Proje temp = null ;
@@ -397,13 +508,13 @@ public class Database {
         Analist a = new Analist("analist",14000);
         Tasarimci t = new Tasarimci("tasarimci",13000);
         Yonetici y = new Yonetici( "oguz", 4500);
-        Yonetici y1 = new Yonetici("memo",3);
+        Yonetici y1 = new Yonetici("Hacıbekir Lokumu",3);
         Yonetici y2 = new Yonetici("yonetici",4);
-        Proje proje= new Proje(app.getSirket().getProjeler().size() +1 , "ytu", 0, 0, 0, 3, 3, 3, y);
-        Proje proje2= new Proje(app.getSirket().getProjeler().size() +1 , "itu", 0, 0, 0, 3, 3, 3, y1);
-        Proje proje3= new Proje(app.getSirket().getProjeler().size() +1, "odtu", 0, 0, 0, 3, 3, 3, y2);
+        Proje proje= new Proje(3 , "ytu", 0, 0, 0, 3, 3, 3, y);
+        Proje proje2= new Proje(1 , "itu", 0, 0, 0, 3, 3, 3, y1);
+        Proje proje3= new Proje(2, "odtu", 0, 0, 0, 3, 3, 3, y2);
 
-        proje.setStatus(true);
+      	proje.setStatus(true);
         proje2.setStatus(true);
         proje3.setStatus(true);
         app.getSirket().addProject(proje);
@@ -419,6 +530,12 @@ public class Database {
         app.insertProject(proje); 
         app.insertProject(proje2);
         app.insertProject(proje3);
-        //app.deleteProjectFromDatabase(proje.getProjectName());
+		Proje temp=new Proje(1,"hacettepe",1,1,1,5,5,5,y);
+		Calisan as=new Calisan("Ahmet The Çay Master",1250);
+		app.updateCalisanById(4,as);
+
+
+		app.updateProjectById(temp);
+
     }
 }

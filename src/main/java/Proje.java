@@ -32,6 +32,7 @@ public class Proje {
 		this.maxAnalist = maxAnalist;
 		this.maxProgramci = maxProgramci;
 		this.maxTasarimci = maxTasarimci;
+		this.id=id;
 		yonetici.setProjectName(projectName);
 		this.yonetici = yonetici;
 	}
@@ -39,6 +40,7 @@ public class Proje {
 	public Proje(int id, String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
 			int maxProgramci, int maxTasarimci, Calisan yonetici) {
 		super();
+		this.id=id;
 		this.calisanlar = new ArrayList<Calisan>();
 		calisanlar.add(yonetici);
 		this.projectName = projectName;
@@ -61,11 +63,11 @@ public class Proje {
 				calisan.setProjectName(this.projectName);
 				calisan.setProjectId(this.id);
 				calisanlar.add(calisan);
-				System.out.println("Çalýþan Baþarýyla Eklendi" + programci);
+				System.out.println("ï¿½alï¿½ï¿½an Baï¿½arï¿½yla Eklendi" + programci);
 				return true;
 			}
 			else {
-				System.out.println("Projede Maximum Sayýda Programci Bulunmakta");
+				System.out.println("Projede Maximum Sayï¿½da Programci Bulunmakta");
 				return false;
 			}
 		}
@@ -76,11 +78,11 @@ public class Proje {
 				calisan.setProjectName(this.projectName);
 				calisan.setProjectId(this.id);
 				calisanlar.add(calisan);
-				System.out.println("Çalýþan Baþarýyla Eklendi");
+				System.out.println("ï¿½alï¿½ï¿½an Baï¿½arï¿½yla Eklendi");
 				return true;
 			}
 			else {
-				System.out.println("Projede Maximum Sayýda Analist Bulunmakta");
+				System.out.println("Projede Maximum Sayï¿½da Analist Bulunmakta");
 				return false;
 			}
 		}
@@ -91,7 +93,7 @@ public class Proje {
 				calisan.setProjectName(this.projectName);
 				calisan.setProjectId(this.id);
 				calisanlar.add(calisan);
-				System.out.println("Çal??an Ba?ar?yla Eklendi");
+				System.out.println("ï¿½al??an Ba?ar?yla Eklendi");
 				return true;
 			}
 			else {
