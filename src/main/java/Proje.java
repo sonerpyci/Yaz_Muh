@@ -20,7 +20,7 @@ public class Proje {
 	private boolean status;//Active True ,
 	
 
-	public Proje(int id, String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
+	public Proje(/*int id,*/ String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
 			int maxProgramci, int maxTasarimci, Yonetici yonetici) {
 		super();
 		this.calisanlar = new ArrayList<Calisan>();
@@ -32,15 +32,15 @@ public class Proje {
 		this.maxAnalist = maxAnalist;
 		this.maxProgramci = maxProgramci;
 		this.maxTasarimci = maxTasarimci;
-		this.id=id;
+		//this.id=id;
 		yonetici.setProjectName(projectName);
 		this.yonetici = yonetici;
 	}
 	
-	public Proje(int id, String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
+	public Proje(/*int id,*/ String projectName, int minAnalist, int minProgramci, int minTasarimci, int maxAnalist,
 			int maxProgramci, int maxTasarimci, Calisan yonetici) {
 		super();
-		this.id=id;
+		//this.id=id;
 		this.calisanlar = new ArrayList<Calisan>();
 		calisanlar.add(yonetici);
 		this.projectName = projectName;
@@ -54,6 +54,8 @@ public class Proje {
 		this.yonetici = yonetici;
 
 	}
+
+
 
 	public boolean addWorker(Calisan calisan) {
 		

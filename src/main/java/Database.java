@@ -31,8 +31,8 @@ public class Database {
 	public void insertProject(Proje proje)
     {
 		
-    	String SQL = "INSERT INTO projeler(project_name,programci,tasarimci,analist,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,yonetici_id,status,id) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    	String SQL = "INSERT INTO projeler(project_name,programci,tasarimci,analist,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,yonetici_id,status) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try (
                
                 PreparedStatement statement = conn.prepareStatement(SQL);) {
@@ -49,13 +49,13 @@ public class Database {
                 statement.setInt(10, proje.getMaxTasarimci());
                 statement.setInt(11, proje.getYonetici().getId());
                 statement.setBoolean(12, proje.getStatus());
-				statement.setInt(13, proje.getId());
+				//statement.setInt(13, proje.getId());
                 statement.addBatch();
 
                 statement.executeBatch();
                 
                 for ( Calisan c : proje.getCalisanlar()) {
-                	insertCalisan(c.getId(),c);
+                	insertCalisan(c);
                 }
                 
             
@@ -65,10 +65,10 @@ public class Database {
  
     }
     
-    public void insertCalisan(int id,Calisan calisan)
+    public void insertCalisan(Calisan calisan)
     {
-    	String SQL = "INSERT INTO calisanlar(salary,status,name,worker_type,project_name,id) "
-                + "VALUES(?,?,?,?,?,?)";
+    	String SQL = "INSERT INTO calisanlar(salary,status,name,worker_type,project_name) "
+                + "VALUES(?,?,?,?,?)";
     	String worker_type = new String();
         try (
                 
@@ -93,7 +93,6 @@ public class Database {
                 }
                 statement.setString(4, worker_type);
                 statement.setString(5, calisan.getProjectName());
-                statement.setInt(6,id);
 
                 statement.addBatch();
 
@@ -138,8 +137,8 @@ public class Database {
 		    			 temp = (Yonetici)c;
 		    		 }
 		    	 }
-		    	 temp_project = new Proje(id, project_name,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,temp);
-		    	 //temp_project.setId(id);
+		    	 temp_project = new Proje(/*id,*/ project_name,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,temp);
+		    	 temp_project.setId(id);
 		    	 calisanlar = sirket.getCalisanlar();
 		    	/* if (temp_project!=null) {
 		    		 for ( Calisan c : calisanlar ) {
@@ -149,8 +148,10 @@ public class Database {
 			    	 }
 			    	 sirket.getProjeler().add(temp_project);
 		    	 } */
-		    	 sirket.getProjeler().add(temp_project);
-		    	}
+				projeler.add(temp_project);
+
+			}
+			sirket.setProjeler(projeler);
 			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -343,6 +344,7 @@ public class Database {
 yapacak.
  */
 		int id = p.getId();
+		sirket.setProjeler(new ArrayList<Proje>());
 		getProjectsFromDatabase();
 		ArrayList<Proje> temp=sirket.getProjeler();
 		for(Proje s : temp){
@@ -385,23 +387,25 @@ yapacak.
 				System.out.println(ex.getMessage());
 			}
 		}
-		public void updateCalisanById(int id ,Calisan p){
+		public void updateCalisanById(Calisan p){
 			// Update veya insert işlemi için Calisanin idsi ve Calisan Formundan Elde edilen bilgilerle oluşturulmuş çalışan nesnesi fonksiyona gönderililir verilen id'de çalışan varsa
 			//update eder yoksa insert eder
+			sirket.setCalisanlar(new ArrayList<Calisan>());
+			sirket.setProjeler(new ArrayList<Proje>());
 			getProjectsFromDatabase();
 			getCalisanlarFromDatabase();
 			ArrayList<Calisan> temp=sirket.getCalisanlar();
 			for(Calisan s : temp){
 				System.out.println("Calisan id "+s.getId());
-				if(s.getId()==id){
+				if(s.getId()==p.getId()){
 					System.out.println("Update Ediliyor");
-					updateCalisan(id,p);
+					updateCalisan(p.getId(), p);
 
 					return;
 				}
 			}
 			System.out.println("İnsert İşlemi");
-			insertCalisan(id,p);
+			insertCalisan(p);
 	}
 
 
@@ -510,9 +514,9 @@ yapacak.
         Yonetici y = new Yonetici( "oguz", 4500);
         Yonetici y1 = new Yonetici("Hacıbekir Lokumu",3);
         Yonetici y2 = new Yonetici("yonetici",4);
-        Proje proje= new Proje(3 , "ytu", 0, 0, 0, 3, 3, 3, y);
-        Proje proje2= new Proje(1 , "itu", 0, 0, 0, 3, 3, 3, y1);
-        Proje proje3= new Proje(2, "odtu", 0, 0, 0, 3, 3, 3, y2);
+        Proje proje= new Proje(/*3 , */"ytu", 0, 0, 0, 3, 3, 3, y);
+        Proje proje2= new Proje(/*1 ,*/ "itu", 0, 0, 0, 3, 3, 3, y1);
+        Proje proje3= new Proje(/*2,*/ "odtu", 0, 0, 0, 3, 3, 3, y2);
 
       	proje.setStatus(true);
         proje2.setStatus(true);
@@ -530,9 +534,9 @@ yapacak.
         app.insertProject(proje); 
         app.insertProject(proje2);
         app.insertProject(proje3);
-		Proje temp=new Proje(1,"hacettepe",1,1,1,5,5,5,y);
+		Proje temp=new Proje(/*1,*/"hacettepe",1,1,1,5,5,5,y);
 		Calisan as=new Calisan("Ahmet The Çay Master",1250);
-		app.updateCalisanById(4,as);
+		app.updateCalisanById(as);
 
 
 		app.updateProjectById(temp);

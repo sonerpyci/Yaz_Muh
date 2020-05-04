@@ -1,15 +1,17 @@
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 public class YazMuhGUI extends JFrame {
@@ -44,7 +46,6 @@ public class YazMuhGUI extends JFrame {
         this.setContentPane(mainPanel);
         this.projectsPanel.setVisible(false);
         this.staffsPanel.setVisible(false);
-
 
 
         projectsButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -160,8 +161,236 @@ public class YazMuhGUI extends JFrame {
         newProjectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DefaultTableModel tableModel = (DefaultTableModel)projectsTable.getModel();
-                tableModel.addRow(new Object[]{});
+                NumberFormat format = NumberFormat.getInstance();
+                NumberFormatter formatter = new NumberFormatter(format);
+                formatter.setValueClass(Integer.class);
+                formatter.setMinimum(0);
+                formatter.setMaximum(Integer.MAX_VALUE);
+                formatter.setAllowsInvalid(true);
+                // If you want the value to be committed on each keystroke instead of focus lost
+                formatter.setCommitsOnValidEdit(true);
+
+                JPanel panel = new JPanel(new GridLayout(0, 2));
+
+
+                JLabel workerRolesLabel = new JLabel("Pozisyon : ");
+                String[] workerRoles = {"yonetici", "programci", "analist", "tasarimci"};
+                JComboBox<String> workerRolesCombo = new JComboBox<>(workerRoles);
+
+                JLabel statusLabel = new JLabel("Durum : ");
+                String[] statusValues = {"true", "false"};
+                JComboBox<String> statusCombo = new JComboBox<>(statusValues);
+
+
+                JLabel minAnalistLabel = new JLabel("Min. Analist : ");
+                JFormattedTextField  minAnalistField = new JFormattedTextField (formatter);
+
+                JLabel minProgramciLabel = new JLabel("Min. Programci : ");
+                JFormattedTextField  minProgramciField = new JFormattedTextField (formatter);
+
+                JLabel minTasarimciLabel = new JLabel("Min Tasarimci : ");
+                JFormattedTextField  minTasarimciField = new JFormattedTextField (formatter);
+
+                JLabel maxanalistLabel = new JLabel("Max. Analist : ");
+                JFormattedTextField  maxAnalistField = new JFormattedTextField (formatter);
+
+                JLabel maxProgramciLabel = new JLabel("Max. Programci : ");
+                JFormattedTextField  maxProgramciField = new JFormattedTextField (formatter);
+
+                JLabel maxTasarimciLabel = new JLabel("Max Tasarimci : ");
+                JFormattedTextField  maxTasarimciField = new JFormattedTextField (formatter);
+
+                JLabel yoneticiIdLabel = new JLabel("Yonetici Id : ");
+                JFormattedTextField  yoneticiIdField = new JFormattedTextField (formatter);
+
+                JLabel projectNameLabel = new JLabel("Proje Ad? : ");
+                JTextField projectNameField = new JTextField ("");
+
+
+                panel.add(projectNameLabel);
+                panel.add(projectNameField);
+
+                panel.add(minAnalistLabel);
+                panel.add(minAnalistField);
+
+                panel.add(minProgramciLabel);
+                panel.add(minProgramciField);
+
+                panel.add(minTasarimciLabel);
+                panel.add(minTasarimciField);
+
+                panel.add(maxanalistLabel);
+                panel.add(maxAnalistField);
+
+                panel.add(maxProgramciLabel);
+                panel.add(maxProgramciField);
+
+                panel.add(maxTasarimciLabel);
+                panel.add(maxTasarimciField);
+
+                panel.add(yoneticiIdLabel);
+                panel.add(yoneticiIdField);
+
+                /*panel.add(workerRolesLabel);
+                panel.add(workerRolesCombo);*/
+
+                panel.add(statusLabel);
+                panel.add(statusCombo);
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "Yeni Proje",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+
+                        int minAnalist = Integer.parseInt(minAnalistField.getText());
+                        int minProgramci = Integer.parseInt(minProgramciField.getText());
+                        int minTasarimci = Integer.parseInt(minTasarimciField.getText());
+                        int maxAnalist = Integer.parseInt(maxAnalistField.getText());
+                        int maxProgramci = Integer.parseInt(maxProgramciField.getText());
+                        int maxTasarimci = Integer.parseInt(maxTasarimciField.getText());
+
+                        int yonetici = Integer.parseInt(yoneticiIdField.getText());
+                        boolean status = Boolean.parseBoolean(String.valueOf(statusCombo.getSelectedItem()));
+                        String projectName = projectNameField.getText();
+
+
+                        database.getProjectsFromDatabase();
+                        database.getCalisanlarFromDatabase();
+                        List<Calisan> calisanlar = database.getCalisanlar();
+                        for (int i = 0; i < calisanlar.size(); i++){
+                            if (yonetici == calisanlar.get(i).getId()){
+                                Calisan tempYonetici = calisanlar.get(i);
+                                Proje newProject = new Proje(projectName,minAnalist,minProgramci,minTasarimci,maxAnalist,maxProgramci,maxTasarimci, tempYonetici);
+                                newProject.setStatus(status);
+                                database.updateProjectById(newProject);
+                            }
+
+                        }
+
+                        DefaultTableModel tableModel = buildTableModel(database.getAndReturnProjectsFromDatabase());
+                        projectsTable.setModel(tableModel);
+
+                    } catch (Exception err) {
+
+                    }
+                } else {
+                    System.out.println("Cancelled");
+                }
+                //tableModel.newRowsAdded();
+                //tableModel.
+                //newRowIdList
+            }
+        });
+
+        newStaffButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                NumberFormat format = NumberFormat.getInstance();
+                NumberFormatter formatter = new NumberFormatter(format);
+                formatter.setValueClass(Integer.class);
+                formatter.setMinimum(0);
+                formatter.setMaximum(Integer.MAX_VALUE);
+                formatter.setAllowsInvalid(true);
+                // If you want the value to be committed on each keystroke instead of focus lost
+                formatter.setCommitsOnValidEdit(true);
+
+                JPanel panel = new JPanel(new GridLayout(0, 2));
+
+
+                JLabel nameLabel = new JLabel("Ad Soyad : ");
+                JTextField nameField = new JTextField ("");
+
+                JLabel salaryLabel = new JLabel("Maas : ");
+                JFormattedTextField  salaryField = new JFormattedTextField (formatter);
+
+                JLabel workerRolesLabel = new JLabel("Pozisyon : ");
+                String[] workerRoles = {"yonetici", "programci", "analist", "tasarimci"};
+                JComboBox<String> workerRolesCombo = new JComboBox<>(workerRoles);
+
+
+                JLabel projectNameLabel = new JLabel("Proje Adi : ");
+                ArrayList<String> projectNames = new ArrayList<String>();
+                database.getProjectsFromDatabase();
+                database.getCalisanlarFromDatabase();
+                ArrayList<Proje> projeler = database.getProjeler();
+                for (int i=0; i< projeler.size(); i++) {
+                    if (!projectNames.contains(projeler.get(i).getProjectName())) {
+                        projectNames.add(projeler.get(i).getProjectName());
+                    }
+
+                }
+                Object [] projectNamesObjArr = projectNames.toArray();
+                String[] projectNamesStrArr = Arrays.copyOf(projectNamesObjArr, projectNamesObjArr.length, String[].class);
+                JComboBox<String> projectNamesCombo = new JComboBox<String>(projectNamesStrArr);
+
+
+                JLabel statusLabel = new JLabel("Durum : ");
+                String[] statusValues = {"true", "false"};
+                JComboBox<String> statusCombo = new JComboBox<>(statusValues);
+
+                panel.add(nameLabel);
+                panel.add(nameField);
+
+                panel.add(salaryLabel);
+                panel.add(salaryField);
+
+                panel.add(workerRolesLabel);
+                panel.add(workerRolesCombo);
+
+                panel.add(projectNameLabel);
+                panel.add(projectNamesCombo);
+
+                panel.add(statusLabel);
+                panel.add(statusCombo);
+
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "Yeni Calisan",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+
+                        String name = nameField.getText();
+                        int salary = Integer.parseInt(salaryField.getText().replaceAll("\\,", ""));
+                        String workerRole = String.valueOf(workerRolesCombo.getSelectedItem());
+                        String projectName = String.valueOf(projectNamesCombo.getSelectedItem());
+                        boolean status = Boolean.parseBoolean(String.valueOf(statusCombo.getSelectedItem()));
+
+
+                        database.getSirket().setProjeler(new ArrayList<Proje>());
+                        database.getSirket().setCalisanlar(new ArrayList<Calisan>());
+
+                        database.getProjectsFromDatabase();
+                        database.getCalisanlarFromDatabase();
+
+                        Calisan newCalisan;
+
+                        if (workerRole=="programci") {
+                            newCalisan = new Programci(name,salary);
+                        } else if (workerRole=="analist") {
+                            newCalisan = new Analist(name,salary);
+                        } else if (workerRole=="yonetici") {
+                            newCalisan = new Yonetici(name,salary);
+                        } else if (workerRole=="tasarimci") {
+                            newCalisan = new Tasarimci(name,salary);
+                        } else {
+                            newCalisan = new Calisan(name,salary); // hiç bir bilgi gelmediyse tipini bilmeden üretsin.
+                        }
+
+
+                        newCalisan.setProjectName(projectName);
+                        newCalisan.setStatus(status);
+
+                        database.updateCalisanById(newCalisan);
+
+                        DefaultTableModel tableModel = buildTableModel(database.getAndReturnCalisanlarFromDatabase());
+                        staffsTable.setModel(tableModel);
+
+                    } catch (Exception err) {
+                        err.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Cancelled");
+                }
                 //tableModel.newRowsAdded();
                 //tableModel.
                 //newRowIdList
@@ -267,8 +496,18 @@ public class YazMuhGUI extends JFrame {
                 }
             }
         });
+
     }
 
+    public static KeyAdapter myIntValidation(final JLabel label, final JTextField tf){
+        return new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (!(ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9')) {
+                    tf.setText("");
+                }
+            }
+        };
+    }
 
     public static void main (String[] args) {
         YazMuhGUI frame = new YazMuhGUI("Sirket Paneli");
