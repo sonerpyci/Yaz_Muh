@@ -55,7 +55,7 @@ public class Database {
                 statement.executeBatch();
                 
                 for ( Calisan c : proje.getCalisanlar()) {
-                	insertCalisan(c);
+                	updateCalisan(c.getId(),c);
                 }
                 
             
@@ -67,6 +67,15 @@ public class Database {
     
     public void insertCalisan(Calisan calisan)
     {
+    	Proje updater=null;
+    	for (Proje temp : sirket.getProjeler()){
+    		if(temp.getProjectName().compareToIgnoreCase(calisan.getProjectName())==0){
+    			updater=temp;
+    			temp.addWorker(calisan);
+				System.out.println("Proje eklendi");
+			}
+		}
+    	updateProject(updater.getId());
     	String SQL = "INSERT INTO calisanlar(salary,status,name,worker_type,project_name) "
                 + "VALUES(?,?,?,?,?)";
     	String worker_type = new String();
@@ -134,7 +143,7 @@ public class Database {
 		    	 calisanlar = sirket.getCalisanlar();
 		    	 for (Calisan c : calisanlar) {
 		    		 if (c.getId() == yonetici_id) {
-		    			 temp = (Yonetici)c;
+		    			 temp = c;
 		    		 }
 		    	 }
 		    	 temp_project = new Proje(/*id,*/ project_name,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,temp);

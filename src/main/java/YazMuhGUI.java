@@ -152,6 +152,7 @@ public class YazMuhGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     projectsTable.setModel(buildTableModel(database.getAndReturnProjectsFromDatabase()));
+                    JOptionPane.showMessageDialog(null, "Projeler Yenilendi !",  "", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -250,6 +251,7 @@ public class YazMuhGUI extends JFrame {
                         int maxTasarimci = Integer.parseInt(maxTasarimciField.getText());
 
                         int yonetici = Integer.parseInt(yoneticiIdField.getText());
+
                         boolean status = Boolean.parseBoolean(String.valueOf(statusCombo.getSelectedItem()));
                         String projectName = projectNameField.getText();
 
@@ -373,14 +375,19 @@ public class YazMuhGUI extends JFrame {
                         } else if (workerRole=="tasarimci") {
                             newCalisan = new Tasarimci(name,salary);
                         } else {
-                            newCalisan = new Calisan(name,salary); // hi� bir bilgi gelmediyse tipini bilmeden �retsin.
+                            newCalisan = new Calisan(name,salary); // hi� bir bilgi gelmediyse tipini bilmeden �retsin.
                         }
 
 
                         newCalisan.setProjectName(projectName);
                         newCalisan.setStatus(status);
+                        if(database.getSirket().addWorker(newCalisan)){
+                            database.updateCalisanById(newCalisan);
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null, "Bu proje için daha fazla çalışana gerek yok !",  " ", JOptionPane.INFORMATION_MESSAGE);
+                        }
 
-                        database.updateCalisanById(newCalisan);
 
                         DefaultTableModel tableModel = buildTableModel(database.getAndReturnCalisanlarFromDatabase());
                         staffsTable.setModel(tableModel);
@@ -402,6 +409,7 @@ public class YazMuhGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     staffsTable.setModel(buildTableModel(database.getAndReturnCalisanlarFromDatabase()));
+                    JOptionPane.showMessageDialog(null, "Çalışanlar Yenilendi !",  " ", JOptionPane.INFORMATION_MESSAGE);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -412,21 +420,33 @@ public class YazMuhGUI extends JFrame {
         deleteStaffButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DefaultTableModel tableModel = (DefaultTableModel)staffsTable.getModel();
+                try{
+                    DefaultTableModel tableModel = (DefaultTableModel)staffsTable.getModel();
 
-                System.out.println(staffsTable.getValueAt(staffsTable.getSelectedRow(), 0));
-                database.deleteCalisanFromDatabase((Integer)staffsTable.getValueAt(staffsTable.getSelectedRow(), 0));
-                tableModel.removeRow(staffsTable.getSelectedRow());
+                    System.out.println(staffsTable.getValueAt(staffsTable.getSelectedRow(), 0));
+                    database.deleteCalisanFromDatabase((Integer)staffsTable.getValueAt(staffsTable.getSelectedRow(), 0));
+                    tableModel.removeRow(staffsTable.getSelectedRow());
+                }
+
+
+                catch (Exception ex ){
+                    JOptionPane.showMessageDialog(null, "Lütfen tablodan silinecek çalışanı seçiniz",  "Seçim Hatası", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         deleteProjectsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DefaultTableModel tableModel = (DefaultTableModel)projectsTable.getModel();
 
-                System.out.println(projectsTable.getValueAt(projectsTable.getSelectedRow(), 0));
-                database.deleteProjectFromDatabase((Integer)projectsTable.getValueAt(projectsTable.getSelectedRow(), 0));
-                tableModel.removeRow(projectsTable.getSelectedRow());
+                try{
+                    DefaultTableModel tableModel = (DefaultTableModel)projectsTable.getModel();
+                    System.out.println(projectsTable.getValueAt(projectsTable.getSelectedRow(), 0));
+                    database.deleteProjectFromDatabase((Integer)projectsTable.getValueAt(projectsTable.getSelectedRow(), 0));
+                    tableModel.removeRow(projectsTable.getSelectedRow());
+                }catch (Exception ex ){
+                    JOptionPane.showMessageDialog(null, "Lütfen tablodan silinecek projeyi seçiniz",  "Seçim Hatası", JOptionPane.ERROR_MESSAGE);
+                }
+
             }
         });
 
@@ -453,8 +473,9 @@ public class YazMuhGUI extends JFrame {
                     Boolean status = Boolean.parseBoolean(tableModel.getValueAt(row, 11).toString());
                     String projectName = tableModel.getValueAt(row, 12).toString();
 
+
                     /*  update project by id and values above  */
-                    //  updateProjectById(bla bla);
+
                     /*  update project by id and values above  */
 
 
@@ -464,6 +485,9 @@ public class YazMuhGUI extends JFrame {
 
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
+                }
+                catch (Exception ex ){
+                    JOptionPane.showMessageDialog(null, "Lütfen tablodan bir proje seçiniz", "InfoBox: " + "Seçim Hatası", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
@@ -493,6 +517,9 @@ public class YazMuhGUI extends JFrame {
 
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
+                }
+                catch (Exception ex){
+                    JOptionPane.showMessageDialog(null, "Lütfen tablodan bir çalışan seçiniz", "InfoBox: " + "Seçim Hatası", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });

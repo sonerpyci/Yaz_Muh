@@ -24,7 +24,7 @@ public class Sirket {
 		p.addWorker(c);
 	}
 	
-	public void addWorker(Calisan c ) {
+	public boolean addWorker(Calisan c ) {
 		idCounter++;
 		c.setId(idCounter);
 		calisanlar.add(c);
@@ -33,9 +33,10 @@ public class Sirket {
 			if(control && c.getStatus()==false) {
 				c.setProjectName(p.getProjectName());
 				c.setStatus(true);
-				return;
+				return control;
 			}
 		}
+		return false;
 	}
 	
 	public void addEmptyWorker ( Calisan c ) {
