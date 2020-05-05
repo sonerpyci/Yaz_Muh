@@ -452,73 +452,299 @@ public class YazMuhGUI extends JFrame {
 
 
         this.pack();
-        saveProjectsButton.addActionListener(new ActionListener() {
+        saveProjectsButton.addActionListener(new ActionListener() { //burası
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     DefaultTableModel tableModel = (DefaultTableModel)projectsTable.getModel();
                     int row = projectsTable.getSelectedRow();
-                    int id = Integer.parseInt(tableModel.getValueAt(row, 0).toString());
-                    int programci = Integer.parseInt(tableModel.getValueAt(row, 1).toString());
-                    int tasarimci = Integer.parseInt(tableModel.getValueAt(row, 2).toString());
-                    int analist = Integer.parseInt(tableModel.getValueAt(row, 3).toString());
-                    int minAnalist = Integer.parseInt(tableModel.getValueAt(row, 4).toString());
-                    int minProgramci = Integer.parseInt(tableModel.getValueAt(row, 5).toString());
-                    int minTasarimci = Integer.parseInt(tableModel.getValueAt(row, 6).toString());
-                    int maxAnalist = Integer.parseInt(tableModel.getValueAt(row, 7).toString());
-                    int maxProgramci = Integer.parseInt(tableModel.getValueAt(row, 8).toString());
-                    int maxTasarimci = Integer.parseInt(tableModel.getValueAt(row, 9).toString());
-                    int yoneticiId = Integer.parseInt(tableModel.getValueAt(row, 10).toString());
+                    String idActual = tableModel.getValueAt(row, 0).toString();
+                    String programciActual = tableModel.getValueAt(row, 1).toString();
+                    String tasarimciActual = tableModel.getValueAt(row, 2).toString();
+                    String analistActual = tableModel.getValueAt(row, 3).toString();
+                    String minAnalistActual = tableModel.getValueAt(row, 4).toString();
+                    String minProgramciActual = tableModel.getValueAt(row, 5).toString();
+                    String minTasarimciActual = tableModel.getValueAt(row, 6).toString();
+                    String maxAnalistActual = tableModel.getValueAt(row, 7).toString();
+                    String maxProgramciActual = tableModel.getValueAt(row, 8).toString();
+                    String maxTasarimciActual = tableModel.getValueAt(row, 9).toString();
+                    String yoneticiIdActual = tableModel.getValueAt(row, 10).toString();
 
-                    Boolean status = Boolean.parseBoolean(tableModel.getValueAt(row, 11).toString());
-                    String projectName = tableModel.getValueAt(row, 12).toString();
+                    Boolean statusActual = Boolean.parseBoolean(tableModel.getValueAt(row, 11).toString());
+                    String projectNameActual = tableModel.getValueAt(row, 12).toString();
 
 
                     /*  update project by id and values above  */
+                    NumberFormat format = NumberFormat.getInstance();
+                    NumberFormatter formatter = new NumberFormatter(format);
+                    formatter.setValueClass(Integer.class);
+                    formatter.setMinimum(0);
+                    formatter.setMaximum(Integer.MAX_VALUE);
+                    formatter.setAllowsInvalid(true);
+                    // If you want the value to be committed on each keystroke instead of focus lost
+                    formatter.setCommitsOnValidEdit(true);
 
-                    /*  update project by id and values above  */
+                    JPanel panel = new JPanel(new GridLayout(0, 2));
 
 
-                    // this line for refresh the view state
-                    projectsTable.setModel(buildTableModel(database.getAndReturnProjectsFromDatabase()));
+                    JLabel statusLabel = new JLabel("Durum : ");
+                    String[] statusValues = {"true", "false"};
+                    JComboBox<String> statusCombo = new JComboBox<>(statusValues);
+
+                    statusCombo.setSelectedIndex(statusActual ? 0 : 1);
+
+                    JLabel minAnalistLabel = new JLabel("Min. Analist : ");
+                    JFormattedTextField  minAnalistField = new JFormattedTextField (formatter);
+                    minAnalistField.setText(minAnalistActual);
+
+                    JLabel minProgramciLabel = new JLabel("Min. Programci : ");
+                    JFormattedTextField  minProgramciField = new JFormattedTextField (formatter);
+                    minProgramciField.setText(minProgramciActual);
+
+                    JLabel minTasarimciLabel = new JLabel("Min Tasarimci : ");
+                    JFormattedTextField  minTasarimciField = new JFormattedTextField (formatter);
+                    minTasarimciField.setText(minTasarimciActual);
+
+                    JLabel maxanalistLabel = new JLabel("Max. Analist : ");
+                    JFormattedTextField  maxAnalistField = new JFormattedTextField (formatter);
+                    maxAnalistField.setText(maxAnalistActual);
+
+                    JLabel maxProgramciLabel = new JLabel("Max. Programci : ");
+                    JFormattedTextField  maxProgramciField = new JFormattedTextField (formatter);
+                    maxProgramciField.setText(maxProgramciActual);
+
+                    JLabel maxTasarimciLabel = new JLabel("Max Tasarimci : ");
+                    JFormattedTextField  maxTasarimciField = new JFormattedTextField (formatter);
+                    maxTasarimciField.setText(maxTasarimciActual);
+
+                    JLabel yoneticiIdLabel = new JLabel("Yonetici Id : ");
+                    JFormattedTextField  yoneticiIdField = new JFormattedTextField (formatter);
+                    yoneticiIdField.setText(yoneticiIdActual);
+
+                    JLabel projectNameLabel = new JLabel("Proje Ad? : ");
+                    JTextField projectNameField = new JTextField ("");
+                    projectNameField.setText(projectNameActual);
+
+                    panel.add(projectNameLabel);
+                    panel.add(projectNameField);
+
+                    panel.add(minAnalistLabel);
+                    panel.add(minAnalistField);
+
+                    panel.add(minProgramciLabel);
+                    panel.add(minProgramciField);
+
+                    panel.add(minTasarimciLabel);
+                    panel.add(minTasarimciField);
+
+                    panel.add(maxanalistLabel);
+                    panel.add(maxAnalistField);
+
+                    panel.add(maxProgramciLabel);
+                    panel.add(maxProgramciField);
+
+                    panel.add(maxTasarimciLabel);
+                    panel.add(maxTasarimciField);
+
+                    panel.add(yoneticiIdLabel);
+                    panel.add(yoneticiIdField);
+
+                    panel.add(statusLabel);
+                    panel.add(statusCombo);
+
+                    int result = JOptionPane.showConfirmDialog(null, panel, "Yeni Proje",
+                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (result == JOptionPane.OK_OPTION) {
+                        int minAnalist = Integer.parseInt(minAnalistField.getText());
+                        int minProgramci = Integer.parseInt(minProgramciField.getText());
+                        int minTasarimci = Integer.parseInt(minTasarimciField.getText());
+                        int maxAnalist = Integer.parseInt(maxAnalistField.getText());
+                        int maxProgramci = Integer.parseInt(maxProgramciField.getText());
+                        int maxTasarimci = Integer.parseInt(maxTasarimciField.getText());
+
+                        int yonetici = Integer.parseInt(yoneticiIdField.getText());
+
+                        boolean status = Boolean.parseBoolean(String.valueOf(statusCombo.getSelectedItem()));
+                        String projectName = projectNameField.getText();
 
 
+                        database.getProjectsFromDatabase();
+                        database.getCalisanlarFromDatabase();
+                        List<Calisan> calisanlar = database.getCalisanlar();
+                        for (int i = 0; i < calisanlar.size(); i++) {
+                            if (yonetici == calisanlar.get(i).getId()) {
+                                Calisan tempYonetici = calisanlar.get(i);
+                                Proje newProject = new Proje(projectName, minAnalist, minProgramci, minTasarimci, maxAnalist, maxProgramci, maxTasarimci, tempYonetici);
+                                newProject.setId(Integer.parseInt(idActual));
+                                newProject.setStatus(status);
+                                database.updateProjectById(newProject);
+                            }
+
+                        }
+
+                        tableModel = buildTableModel(database.getAndReturnProjectsFromDatabase());
+                        projectsTable.setModel(tableModel);
+                        /*  update project by id and values above  */
+                    } else {
+                        // this line for refresh the view state
+                        projectsTable.setModel(buildTableModel(database.getAndReturnProjectsFromDatabase()));
+                    }
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
-                }
-                catch (Exception ex ){
+                } catch (Exception ex) {
+                    System.out.println(ex);
                     JOptionPane.showMessageDialog(null, "Lütfen tablodan bir proje seçiniz", "InfoBox: " + "Seçim Hatası", JOptionPane.INFORMATION_MESSAGE);
                 }
+
             }
         });
+
         saveStaffButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    DefaultTableModel tableModel = (DefaultTableModel)staffsTable.getModel();
+                    DefaultTableModel tableModel = (DefaultTableModel) staffsTable.getModel();
                     int row = staffsTable.getSelectedRow();
-                    int id = Integer.parseInt(tableModel.getValueAt(row, 0).toString());
-                    String salary = tableModel.getValueAt(row, 1).toString();
-                    Boolean status = Boolean.parseBoolean(tableModel.getValueAt(row, 2).toString());
-                    String name = tableModel.getValueAt(row, 3).toString();
-                    String workerType = tableModel.getValueAt(row, 4).toString();
-                    String projectName = tableModel.getValueAt(row, 5).toString();
+                    String idActual = tableModel.getValueAt(row, 0).toString();
+                    String salaryActual = tableModel.getValueAt(row, 1).toString();
+                    Boolean statusActual = Boolean.parseBoolean(tableModel.getValueAt(row, 2).toString());
+                    String nameActual = tableModel.getValueAt(row, 3).toString();
+                    String workerTypeActual = tableModel.getValueAt(row, 4).toString();
+                    String projectNameActual = tableModel.getValueAt(row, 5).toString();
+
+
+                    NumberFormat format = NumberFormat.getInstance();
+                    NumberFormatter formatter = new NumberFormatter(format);
+                    formatter.setValueClass(Integer.class);
+                    formatter.setMinimum(0);
+                    formatter.setMaximum(Integer.MAX_VALUE);
+                    formatter.setAllowsInvalid(true);
+                    formatter.setCommitsOnValidEdit(true);
+
+                    JPanel panel = new JPanel(new GridLayout(0, 2));
+
+                    JLabel nameLabel = new JLabel("Ad Soyad : ");
+                    JTextField nameField = new JTextField(nameActual);
+
+                    JLabel salaryLabel = new JLabel("Maas : ");
+                    JFormattedTextField salaryField = new JFormattedTextField(formatter);
+                    salaryField.setText(salaryActual);
+
+                    JLabel workerRolesLabel = new JLabel("Pozisyon : ");
+                    String[] workerRoles = {"yonetici", "programci", "analist", "tasarimci"};
+                    JComboBox<String> workerRolesCombo = new JComboBox<>(workerRoles);
+                    switch (workerTypeActual) {
+                        case "yonetici":
+                            workerRolesCombo.setSelectedIndex(0);
+                            break;
+                        case "programci":
+                            workerRolesCombo.setSelectedIndex(1);
+                            break;
+                        case "analist":
+                            workerRolesCombo.setSelectedIndex(2);
+                            break;
+                        case "tasarimci":
+                            workerRolesCombo.setSelectedIndex(3);
+                            break;
+                    }
+
+                    JLabel projectNameLabel = new JLabel("Proje Adi : ");
+
+                    ArrayList<String> projectNames = new ArrayList<String>();
+                    database.getProjectsFromDatabase();
+                    database.getCalisanlarFromDatabase();
+                    ArrayList<Proje> projeler = database.getProjeler();
+                    for (int i = 0; i < projeler.size(); i++) {
+                        if (!projectNames.contains(projeler.get(i).getProjectName())) {
+                            projectNames.add(projeler.get(i).getProjectName());
+                        }
+
+                    }
+                    Object[] projectNamesObjArr = projectNames.toArray();
+                    String[] projectNamesStrArr = Arrays.copyOf(projectNamesObjArr, projectNamesObjArr.length, String[].class);
+                    JComboBox<String> projectNamesCombo = new JComboBox<String>(projectNamesStrArr);
+                    for (int i=0; i < projectNamesStrArr.length; i++){
+                        if (projectNamesStrArr[i].equals(projectNameActual))
+                            projectNamesCombo.setSelectedItem(i);
+                    }
 
 
 
-                    /*  update calisan by id and values above  */
-                    //  updateCalisanById(id, other values ..., bla bla);
-                    /*  update project by id and values above  */
+                    JLabel statusLabel = new JLabel("Durum : ");
+                    String[] statusValues = {"true", "false"};
+                    JComboBox<String> statusCombo = new JComboBox<>(statusValues);
+                    statusCombo.setSelectedItem(statusActual ? 1 : 0);
+
+                    panel.add(nameLabel);
+                    panel.add(nameField);
+
+                    panel.add(salaryLabel);
+                    panel.add(salaryField);
+
+                    panel.add(workerRolesLabel);
+                    panel.add(workerRolesCombo);
+
+                    panel.add(projectNameLabel);
+                    panel.add(projectNamesCombo);
+
+                    panel.add(statusLabel);
+                    panel.add(statusCombo);
 
 
-                    // this line for refresh the view state
-                    staffsTable.setModel(buildTableModel(database.getAndReturnCalisanlarFromDatabase()));
+                    int result = JOptionPane.showConfirmDialog(null, panel, "Yeni Calisan",
+                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (result == JOptionPane.OK_OPTION) {
 
 
+                        String name = nameField.getText();
+                        int salary = Integer.parseInt(salaryField.getText().replaceAll("\\,", ""));
+                        String workerRole = String.valueOf(workerRolesCombo.getSelectedItem());
+                        String projectName = String.valueOf(projectNamesCombo.getSelectedItem());
+                        boolean status = Boolean.parseBoolean(String.valueOf(statusCombo.getSelectedItem()));
+
+
+                        database.getSirket().setProjeler(new ArrayList<Proje>());
+                        database.getSirket().setCalisanlar(new ArrayList<Calisan>());
+
+                        database.getProjectsFromDatabase();
+                        database.getCalisanlarFromDatabase();
+
+                        Calisan newCalisan;
+
+                        if (workerRole == "programci") {
+                            newCalisan = new Programci(name, salary);
+                        } else if (workerRole == "analist") {
+                            newCalisan = new Analist(name, salary);
+                        } else if (workerRole == "yonetici") {
+                            newCalisan = new Yonetici(name, salary);
+                        } else if (workerRole == "tasarimci") {
+                            newCalisan = new Tasarimci(name, salary);
+                        } else {
+                            newCalisan = new Calisan(name, salary); // hi� bir bilgi gelmediyse tipini bilmeden �retsin.
+                        }
+
+                        newCalisan.setId(Integer.parseInt(idActual));
+                        newCalisan.setProjectName(projectName);
+                        newCalisan.setStatus(status);
+                        if (database.getSirket().addWorker(newCalisan)) {
+                            database.updateCalisanById(newCalisan);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Bu proje için daha fazla çalışana gerek yok !", " ", JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+
+                        tableModel = buildTableModel(database.getAndReturnCalisanlarFromDatabase());
+                        staffsTable.setModel(tableModel);
+
+                        /*  update project by id and values above  */
+
+                    } else {
+                        // this line for refresh the view state
+                        staffsTable.setModel(buildTableModel(database.getAndReturnCalisanlarFromDatabase()));
+                    }
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Lütfen tablodan bir çalışan seçiniz", "InfoBox: " + "Seçim Hatası", JOptionPane.INFORMATION_MESSAGE);
                 }
             }

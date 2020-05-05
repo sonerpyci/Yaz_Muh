@@ -92,22 +92,6 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="c9c64" class="javax.swing.JButton" binding="saveProjectsButton">
-                <constraints>
-                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Değişiklikleri Uygula"/>
-                </properties>
-              </component>
-              <component id="84237" class="javax.swing.JButton" binding="refreshProjectsButton">
-                <constraints>
-                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Yenile"/>
-                </properties>
-              </component>
               <component id="8a626" class="javax.swing.JLabel" binding="projectsLabel">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -121,11 +105,6 @@
               <hspacer id="42fce">
                 <constraints>
                   <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
-              <hspacer id="6098f">
-                <constraints>
-                  <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
               </hspacer>
               <scrollpane id="89a9b" binding="projectsScrollPane">
@@ -163,6 +142,27 @@
                 </constraints>
                 <properties>
                   <text value="Sil"/>
+                </properties>
+              </component>
+              <hspacer id="6098f">
+                <constraints>
+                  <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="c9c64" class="javax.swing.JButton" binding="saveProjectsButton">
+                <constraints>
+                  <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Düzenle"/>
+                </properties>
+              </component>
+              <component id="84237" class="javax.swing.JButton" binding="refreshProjectsButton">
+                <constraints>
+                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Yenile"/>
                 </properties>
               </component>
             </children>
@@ -215,11 +215,6 @@
             </properties>
             <border type="none"/>
             <children>
-              <hspacer id="ae049">
-                <constraints>
-                  <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
               <scrollpane id="11e7b" binding="staffsScrollPane">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="9" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -253,27 +248,11 @@
                   <text value="Çalışanlar"/>
                 </properties>
               </component>
-              <component id="6885d" class="javax.swing.JButton" binding="refreshStaffButton">
-                <constraints>
-                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Yenile"/>
-                </properties>
-              </component>
               <hspacer id="752b9">
                 <constraints>
                   <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
               </hspacer>
-              <component id="1c136" class="javax.swing.JButton" binding="saveStaffButton">
-                <constraints>
-                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Değişiklikleri Uygula"/>
-                </properties>
-              </component>
               <component id="b46a2" class="javax.swing.JButton" binding="newStaffButton">
                 <constraints>
                   <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -289,6 +268,27 @@
                 </constraints>
                 <properties>
                   <text value="Sil"/>
+                </properties>
+              </component>
+              <hspacer id="ae049">
+                <constraints>
+                  <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="1c136" class="javax.swing.JButton" binding="saveStaffButton">
+                <constraints>
+                  <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Düzenle"/>
+                </properties>
+              </component>
+              <component id="6885d" class="javax.swing.JButton" binding="refreshStaffButton">
+                <constraints>
+                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Yenile"/>
                 </properties>
               </component>
             </children>
