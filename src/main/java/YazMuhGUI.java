@@ -250,7 +250,7 @@ public class YazMuhGUI extends JFrame {
                         int maxProgramci = Integer.parseInt(maxProgramciField.getText());
                         int maxTasarimci = Integer.parseInt(maxTasarimciField.getText());
 
-                        int yonetici = Integer.parseInt(yoneticiIdField.getText());
+                        int yonetici = yoneticiIdField.getText() != null ? Integer.parseInt(yoneticiIdField.getText()) : null;
 
                         boolean status = Boolean.parseBoolean(String.valueOf(statusCombo.getSelectedItem()));
                         String projectName = projectNameField.getText();
@@ -353,7 +353,7 @@ public class YazMuhGUI extends JFrame {
                     try {
 
                         String name = nameField.getText();
-                        int salary = Integer.parseInt(salaryField.getText().replaceAll("\\,", ""));
+                        int salary = Integer.parseInt(salaryField.getText().replaceAll("\\,", "").replaceAll("\\.", ""));
                         String workerRole = String.valueOf(workerRolesCombo.getSelectedItem());
                         String projectName = String.valueOf(projectNamesCombo.getSelectedItem());
                         boolean status = Boolean.parseBoolean(String.valueOf(statusCombo.getSelectedItem()));
@@ -552,9 +552,28 @@ public class YazMuhGUI extends JFrame {
                     JFormattedTextField  maxTasarimciField = new JFormattedTextField (formatter);
                     maxTasarimciField.setText(maxTasarimciActual);
 
-                    JLabel yoneticiIdLabel = new JLabel("Yonetici Id : ");
-                    JFormattedTextField  yoneticiIdField = new JFormattedTextField (formatter);
-                    yoneticiIdField.setText(yoneticiIdActual);
+                    database.getProjectsFromDatabase();
+                    database.getCalisanlarFromDatabase();
+
+                    ArrayList<String> calisanNameArrayList = new ArrayList<String>();
+                    ArrayList<Calisan> calisanlar = database.getCalisanlar();
+                    for (int i = 0; i < calisanlar.size(); i++) {
+                        if (calisanlar.get(i) instanceof Yonetici) {
+                            calisanNameArrayList.add(calisanlar.get(i).getName());
+                        }
+
+                    }
+                    Object[] calisanNamesArr = calisanNameArrayList.toArray();
+                    String[] calisanNamesStrArr = Arrays.copyOf(calisanNamesArr, calisanNamesArr.length, String[].class);
+                    JLabel yoneticiIdLabel = new JLabel("Yonetici : ");
+                    JComboBox<String> yoneticiIdCombo = new JComboBox<String>(calisanNamesStrArr);
+
+                    for (int i=0; i < calisanlar.size(); i++){
+                        if (calisanlar.get(i).getId() == Integer.parseInt(yoneticiIdActual))
+                            yoneticiIdCombo.setSelectedItem(i);
+                    }
+
+
 
                     JLabel projectNameLabel = new JLabel("Proje Ad? : ");
                     JTextField projectNameField = new JTextField ("");
@@ -582,7 +601,7 @@ public class YazMuhGUI extends JFrame {
                     panel.add(maxTasarimciField);
 
                     panel.add(yoneticiIdLabel);
-                    panel.add(yoneticiIdField);
+                    panel.add(yoneticiIdCombo);
 
                     panel.add(statusLabel);
                     panel.add(statusCombo);
@@ -596,16 +615,18 @@ public class YazMuhGUI extends JFrame {
                         int maxAnalist = Integer.parseInt(maxAnalistField.getText());
                         int maxProgramci = Integer.parseInt(maxProgramciField.getText());
                         int maxTasarimci = Integer.parseInt(maxTasarimciField.getText());
-
-                        int yonetici = Integer.parseInt(yoneticiIdField.getText());
+                        int yonetici = 0;
+                        String yoneticiName = String.valueOf(yoneticiIdCombo.getSelectedItem());
+                        for (int i=0; i < calisanlar.size(); i++){
+                            if (calisanlar.get(i).getName().equalsIgnoreCase(yoneticiName))
+                                yonetici = calisanlar.get(i).getId(); // burası
+                        }
 
                         boolean status = Boolean.parseBoolean(String.valueOf(statusCombo.getSelectedItem()));
                         String projectName = projectNameField.getText();
 
 
-                        database.getProjectsFromDatabase();
-                        database.getCalisanlarFromDatabase();
-                        List<Calisan> calisanlar = database.getCalisanlar();
+                        //List<Calisan> calisanlar = database.getCalisanlar();
                         for (int i = 0; i < calisanlar.size(); i++) {
                             if (yonetici == calisanlar.get(i).getId()) {
                                 Calisan tempYonetici = calisanlar.get(i);
