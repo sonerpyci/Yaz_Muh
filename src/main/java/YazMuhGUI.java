@@ -124,6 +124,7 @@ public class YazMuhGUI extends JFrame {
 
                 try {
                     DefaultTableModel tableModel = buildTableModel(database.getAndReturnCalisanlarFromDatabase());
+
                     tableModel.addTableModelListener(new TableModelListener() {
 
                         @Override
@@ -419,6 +420,7 @@ public class YazMuhGUI extends JFrame {
 
 
                         DefaultTableModel tableModel = buildTableModel(database.getAndReturnCalisanlarFromDatabase());
+
                         staffsTable.setModel(tableModel);
 
                     } catch (Exception err) {
@@ -792,6 +794,7 @@ public class YazMuhGUI extends JFrame {
 
 
                         tableModel = buildTableModel(database.getAndReturnCalisanlarFromDatabase());
+
                         staffsTable.setModel(tableModel);
 
                         /*  update project by id and values above  */
@@ -822,6 +825,18 @@ public class YazMuhGUI extends JFrame {
 
     public static void main (String[] args) {
         YazMuhGUI frame = new YazMuhGUI("Sirket Paneli");
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
         frame.setSize(1366,768);
         frame.setResizable(false);
         frame.setVisible(true);
