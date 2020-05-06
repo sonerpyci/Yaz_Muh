@@ -476,7 +476,7 @@ public class YazMuhGUI extends JFrame {
                     System.out.println(projectsTable.getValueAt(projectsTable.getSelectedRow(), 0));
 
                     database.deleteProjectFromDatabase((Integer)projectsTable.getValueAt(projectsTable.getSelectedRow(), 0));
-
+                    projectsTable.setModel(buildTableModel(database.getAndReturnProjectsFromDatabase()));
                     tableModel.removeRow(projectsTable.getSelectedRow());
                 }catch (Exception ex ){
                     JOptionPane.showMessageDialog(null, "Lütfen tablodan silinecek projeyi seçiniz",  "Seçim Hatası", JOptionPane.ERROR_MESSAGE);

@@ -350,6 +350,7 @@ public class Database {
 		System.out.println("--------------------------------------------------------");
     	String SQL = "DELETE FROM projeler where id=?";
     	String sql2 = "UPDATE calisanlar set project_name = null where project_name=?";
+    	String sql3="delete from calisanlar where project_name is null";
     	Proje temp = null;
 		String projeAdi ="?";
     	for (Proje p : sirket.getProjeler()) {
@@ -421,6 +422,17 @@ public class Database {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+		try (
+				PreparedStatement pstmt = conn.prepareStatement(sql3)) {
+
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+
     }
 
 
