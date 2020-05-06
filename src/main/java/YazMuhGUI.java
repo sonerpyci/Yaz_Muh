@@ -458,9 +458,9 @@ public class YazMuhGUI extends JFrame {
                     database.getProjectsFromDatabase();
                     if(database.deleteCalisanFromDatabase((Integer)staffsTable.getValueAt(staffsTable.getSelectedRow(), 0)))
                         tableModel.removeRow(staffsTable.getSelectedRow());
-                    else{
+                  /*  else{
                         JOptionPane.showMessageDialog(null, "Seçilen Eleman İşi Bırakamaz",  "Seçim Hatası", JOptionPane.ERROR_MESSAGE);
-                    }
+                    }*/
                 }
 
 
