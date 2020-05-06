@@ -65,11 +65,11 @@ public class Proje {
 				calisan.setProjectName(this.projectName);
 				calisan.setProjectId(this.id);
 				calisanlar.add(calisan);
-				System.out.println("�al��an Ba�ar�yla Eklendi" + programci);
+				System.out.println("Çalış Başarıyla Eklendi" + calisan.getName() + " " + calisan.getProjectName());
 				return true;
 			}
 			else {
-				System.out.println("Projede Maximum Say�da Programci Bulunmakta");
+				System.out.println("Projede Maximum Sayıda Programci Bulunmakta");
 				return false;
 			}
 		}
@@ -110,7 +110,7 @@ public class Proje {
 	public boolean removeWorker(Calisan calisan) {
 		if (calisan instanceof Programci) {
 			System.out.println("Programci Siliniyor");
-			if(programci>minProgramci) {
+			if(programci>=minProgramci) {
 				programci--;
 				calisanlar.remove(calisan);
 				return true;
@@ -124,7 +124,7 @@ public class Proje {
 		}
 	
 		if (calisan instanceof Analist) {
-			if(analist>minAnalist) {
+			if(analist>=minAnalist) {
 				analist--;
 				calisanlar.remove(calisan);
 				return true;
@@ -137,7 +137,7 @@ public class Proje {
 		}
 		
 		if (calisan instanceof Tasarimci) {
-			if(tasarimci>minTasarimci) {
+			if(tasarimci>=minTasarimci) {
 				tasarimci--;
 				calisanlar.remove(calisan);
 				return true;

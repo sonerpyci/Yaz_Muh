@@ -16,12 +16,13 @@ public class Sirket {
 	}
 	
 	
-	public void addWorker(Calisan c , Proje p) {
+	public boolean addWorker(Calisan c , Proje p) {
 		idCounter++;
 		c.setId(idCounter);
 		c.setProjectName(p.getProjectName());
 		calisanlar.add(c);
-		p.addWorker(c);
+		boolean control =p.addWorker(c);
+		return control;
 	}
 	
 	public boolean addWorker(Calisan c ) {
@@ -40,35 +41,67 @@ public class Sirket {
 	}
 	
 	public void addEmptyWorker ( Calisan c ) {
+		System.out.println("Boş Eleman Ekleniypor : " +c.getName());
+		System.out.println("-------------------------Proje Size : "+this.projeler.size()+" ---------------------------------");
+		int ix =0;
 		for(Proje p : projeler) {
-			boolean control = p.addWorker(c);
-			if(control && c.getStatus()==false) {
-				c.setProjectName(p.getProjectName());
-				c.setStatus(true);
-				return;
-			}
+			System.out.println(ix+ ".   "+p.getProjectName());
+			ix++;
+				calisanlar.remove(c);
+				boolean control = p.addWorker(c);
+				if(control ) {
+					c.setProjectName(p.getProjectName());
+					c.setStatus(true);
+					calisanlar.add(c);
+					return;
+				}
+				removeWorker(c);
+
+
 		}
 	}
 	
-	public void removeWorker(Calisan c) {
+	public boolean removeWorker(Calisan c) {
+
 		calisanlar.remove(c);
-		for(Proje p :projeler) {
-			if(p.getCalisanlar().contains(c)) {
-				p.removeWorker(c);
-				System.out.println("Remove Workere'a girdi");
+		boolean control=false;
+		for(int i=0;i<projeler.size();i++) {
+			System.out.println("Remove Workere'a girdi");
+			if(projeler.get(i).getCalisanlar().contains(c)) {
+				control=projeler.get(i).removeWorker(c);
+
 			}
 		}
+		return  control;
 	}
 	
 	public void addProject(Proje o) {
+		for (Proje p:projeler
+			 ) {
+			if(p.getProjectName().compareToIgnoreCase(o.getProjectName())==0){
+				System.out.println("EKLENEMEZ");
+				return;
+			}
+
+		}
+
+
 		projeler.add(o);
 	}
 	
 	public void removeProject(Proje o) {
-		ArrayList<Calisan> calisanlar = o.getCalisanlar();
-		for(int i = 0; i < calisanlar.size(); i++) {
+		ArrayList<Calisan> calisanlarr = o.getCalisanlar();
+		projeler.remove(o);
+		int ix =0;
+		System.out.println("---------------------------------Çalışanlar---------------------------------");
+		for(Calisan p : calisanlarr) {
+			System.out.println(ix + ".   " + p.getName());
+			ix++;
+		}
+		for(int i = 0; i < calisanlarr.size(); i++) {
+			System.out.println("************************************************** "+i);
 
-			Calisan c = calisanlar.get(i);
+			Calisan c = calisanlarr.get(i);
 			addEmptyWorker(c);
 			o.removeWorker(c);
 		}
@@ -76,7 +109,7 @@ public class Sirket {
 			addEmptyWorker(c);
 			o.removeWorker(c);
 		}*/
-		projeler.remove(o);
+
 	}
 	
 	public String getCompanyName() {

@@ -5,36 +5,36 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
-	
+
 	Connection conn;
 	private final String url = "jdbc:postgresql://localhost:5432/YSOFT";
     private final String user = "postgres";
     private final String password = "1234";
     Statement stmt ;
-   
+
     private Sirket sirket;
     private ArrayList<Calisan> calisanlar;
     private ArrayList<Proje> projeler;
-    
+
     public Database(String companyName) {
 		super();
 		this.calisanlar = new ArrayList<Calisan>();
 		this.projeler = new ArrayList<Proje>();
 		this.sirket = new Sirket(companyName);
-		
+
 		this.conn = this.connect()  ;
-			
-		
-		
+
+
+
 	}
 
 	public void insertProject(Proje proje)
     {
-		
+
     	String SQL = "INSERT INTO projeler(project_name,programci,tasarimci,analist,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,yonetici_id,status) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try (
-               
+
                 PreparedStatement statement = conn.prepareStatement(SQL);) {
 
                 statement.setString(1, String.valueOf(proje.getProjectName()) );
@@ -53,41 +53,82 @@ public class Database {
                 statement.addBatch();
 
                 statement.executeBatch();
-                
+
                 for ( Calisan c : proje.getCalisanlar()) {
                 	updateCalisan(c.getId(),c);
                 }
-                
-            
+
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
- 
+
     }
-    
+	public void insertCalisanWithoutProject(Calisan calisan)
+	{
+
+		String SQL = "INSERT INTO calisanlar(salary,status,name,worker_type,project_name) "
+				+ "VALUES(?,?,?,?,?)";
+		String worker_type = new String();
+		try (
+
+				PreparedStatement statement = conn.prepareStatement(SQL);) {
+
+			//statement.setInt(1, calisan.getId() );
+			statement.setInt(1, calisan.getSalary());
+			statement.setBoolean(2, calisan.getStatus());
+			statement.setString(3, calisan.getName());
+
+			if (calisan instanceof Programci) {
+				worker_type="programci";
+			}
+			if (calisan instanceof Analist) {
+				worker_type="analist";
+			}
+			if (calisan instanceof Tasarimci) {
+				worker_type="tasarimci";
+			}
+			if (calisan instanceof Yonetici) {
+				worker_type="yonetici";
+			}
+			statement.setString(4, worker_type);
+			statement.setString(5, calisan.getProjectName());
+
+			statement.addBatch();
+
+			statement.executeBatch();
+
+
+		} catch (SQLException ex) {
+			System.out.println(ex.getMessage());
+		}
+
+	}
     public void insertCalisan(Calisan calisan)
     {
     	Proje updater=null;
     	for (Proje temp : sirket.getProjeler()){
     		if(temp.getProjectName().compareToIgnoreCase(calisan.getProjectName())==0){
     			updater=temp;
-    			temp.addWorker(calisan);
-				System.out.println("Proje eklendi");
-			}
-		}
-    	updateProject(updater.getId());
+		temp.addWorker(calisan);
+
+	}
+}
+
+    	if(updater!=null)
+    		updateProject(updater.getId());
     	String SQL = "INSERT INTO calisanlar(salary,status,name,worker_type,project_name) "
                 + "VALUES(?,?,?,?,?)";
     	String worker_type = new String();
         try (
-                
+
                 PreparedStatement statement = conn.prepareStatement(SQL);) {
 
                 //statement.setInt(1, calisan.getId() );
                 statement.setInt(1, calisan.getSalary());
                 statement.setBoolean(2, calisan.getStatus());
                 statement.setString(3, calisan.getName());
-                
+
                 if (calisan instanceof Programci) {
                 	worker_type="programci";
                 }
@@ -106,20 +147,22 @@ public class Database {
                 statement.addBatch();
 
                 statement.executeBatch();
-                
-            
+
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
- 
+
     }
-    
+
     public void getProjectsFromDatabase() {
+    	projeler=new ArrayList<Proje>();
+    	calisanlar=new ArrayList<Calisan>();
     	Proje temp_project ;
     	String sql = "SELECT * FROM projeler";
     	ResultSet rs;
     	Calisan temp= new Yonetici();
-		try { 
+		try {
 			 Statement stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			while(rs.next()) {
@@ -127,19 +170,19 @@ public class Database {
 				 int programci = rs.getInt("programci");
 		    	 int tasarimci = rs.getInt("tasarimci");
 		    	 int analist = rs.getInt("tasarimci");
-		    	 
-		    	 int min_analist = rs.getInt("min_analist"); 
+
+		    	 int min_analist = rs.getInt("min_analist");
 		    	 int min_programci = rs.getInt("min_programci");
 		    	 int min_tasarimci = rs.getInt("min_tasarimci");
-		    	 
-		    	 int max_analist = rs.getInt("max_analist"); 
+
+		    	 int max_analist = rs.getInt("max_analist");
 		    	 int max_programci = rs.getInt("max_programci");
 		    	 int max_tasarimci = rs.getInt("max_tasarimci");
 		    	 int yonetici_id = rs.getInt("yonetici_id");
 		    	 boolean status = rs.getBoolean("status");
 		    	 //int id =rs.getInt("id");
 		    	 String project_name = rs.getString("project_name");
-		    	 System.out.println(project_name);
+
 		    	 calisanlar = sirket.getCalisanlar();
 		    	 for (Calisan c : calisanlar) {
 		    		 if (c.getId() == yonetici_id) {
@@ -148,19 +191,26 @@ public class Database {
 		    	 }
 		    	 temp_project = new Proje(/*id,*/ project_name,min_analist,min_programci,min_tasarimci,max_analist,max_programci,max_tasarimci,temp);
 		    	 temp_project.setId(id);
-		    	 calisanlar = sirket.getCalisanlar();
-		    	/* if (temp_project!=null) {
+		    	 getCalisanlarFromDatabase();
+
+		    	 //calisanlar = sirket.getCalisanlar();
+		    	 if (temp_project!=null) {
+
 		    		 for ( Calisan c : calisanlar ) {
-			    		 if(c.getProjectName().compareToIgnoreCase( project_name )==0) {
-			    			 temp_project.getCalisanlar().add(c);
-			    		 }
+
+
+						if(c.getProjectName()!=null)
+							 if(c.getProjectName().compareToIgnoreCase(temp_project.getProjectName() )==0) {
+								 temp_project.addWorker(c);
+							 }
 			    	 }
-			    	 sirket.getProjeler().add(temp_project);
-		    	 } */
+			    	// sirket.getProjeler().add(temp_project);
+		    	 }
 				projeler.add(temp_project);
 
 			}
 			sirket.setProjeler(projeler);
+			System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++"+projeler.size());
 			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -184,8 +234,9 @@ public class Database {
 			return null;
 		}
     }
-    
+
     public void getCalisanlarFromDatabase() {
+    	calisanlar=new ArrayList<Calisan>();
     	Calisan temp_calisan;
     	String sql = "SELECT * FROM calisanlar";
     	ResultSet rs;
@@ -197,32 +248,36 @@ public class Database {
 		try {
 			 Statement stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
-			while(rs.next()) { 
-		    	 int id = rs.getInt("id"); 
+			while(rs.next()) {
+		    	 int id = rs.getInt("id");
 		    	 int salary = rs.getInt("salary");
 		    	 boolean status = rs.getBoolean("status");
 		    	 String name = rs.getString("name");
 		    	 String worker_type = rs.getString("worker_type");
 		    	 String project_name = rs.getString("project_name");
-		    	 
+
 		    	 if (worker_type.compareToIgnoreCase("programci")==0) {
 		    		 temp_programci = new Programci(name, salary);
 		    		 temp_programci.setId(id);
+		    		 temp_programci.setProjectName(project_name);
 		    		 calisanlar.add(temp_programci);
 		    	 }
 		    	 if (worker_type.compareToIgnoreCase("analist")==0) {
 		    		 temp_analist = new Analist(name,salary);
 		    		 temp_analist.setId(id);
+		    		 temp_analist.setProjectName(project_name);
 		    		 calisanlar.add(temp_analist);
 		    	 }
 		    	 if (worker_type.compareToIgnoreCase("tasarimci")==0) {
 		    		 temp_tasarimci = new Tasarimci(name,salary);
 		    		 temp_tasarimci.setId(id);
+		    		 temp_tasarimci.setProjectName(project_name);
 		    		 calisanlar.add(temp_tasarimci);
 		    	 }
 		    	 if (worker_type.compareToIgnoreCase("yonetici")==0) {
 		    		 temp_yonetici = new Yonetici(name,salary);
 		    		 temp_yonetici.setId(id);
+		    		 temp_yonetici.setProjectName(project_name);
 		    		 calisanlar.add(temp_yonetici);
 		    	 }
 	    		 sirket.setCalisanlar(calisanlar);
@@ -253,9 +308,10 @@ public class Database {
 			return null;
 		}
 	}
-    
-    public void deleteCalisanFromDatabase(int calisan_id) {
+
+    public boolean deleteCalisanFromDatabase(int calisan_id) {
     	Calisan temp=null;
+    	boolean control=false;
     	//String projeAdi ="?";
     	int projectId = -1;
     	for (Calisan c : sirket.getCalisanlar() ) {
@@ -265,26 +321,33 @@ public class Database {
     			temp = c;
     		}
     	}
-    	sirket.removeWorker(temp);
-    	String SQL = "DELETE FROM calisanlar where id=?";
-    	try (
-            PreparedStatement pstmt = conn.prepareStatement(SQL)) {
-            pstmt.setInt(1, calisan_id);
-            pstmt.executeUpdate();
-            //updateProject(projeAdi);
-			if (projectId > -1)
-            	updateProject(projectId);
+    	if(sirket.removeWorker(temp)){
+			String SQL = "DELETE FROM calisanlar where id=?";
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-	
+			try (
+					PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+				pstmt.setInt(1, calisan_id);
+				pstmt.executeUpdate();
+				//updateProject(projeAdi);
+				if (projectId > -1)
+					updateProject(projectId);
+
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		return control;
+
+
     }
-    
+
     public void deleteProjectFromDatabase(int projeId) {
+		sirket.setProjeler(new ArrayList<Proje>());
     	getProjectsFromDatabase();
     	getCalisanlarFromDatabase();
-
+		System.out.println("------------------------------------------------------------");
+		System.out.println("PROJE SİL ");
+		System.out.println("--------------------------------------------------------");
     	String SQL = "DELETE FROM projeler where id=?";
     	String sql2 = "UPDATE calisanlar set project_name = null where project_name=?";
     	Proje temp = null;
@@ -292,9 +355,9 @@ public class Database {
     	for (Proje p : sirket.getProjeler()) {
     		if (p.getId() == projeId) {
 				temp = p;
-				System.out.println("temp project : ");
-				System.out.println(temp);
+
 				projeAdi = p.getProjectName();
+
     			break;
     		}
     	}
@@ -309,6 +372,8 @@ public class Database {
         }
 
 		sirket.removeProject(temp);
+
+
     	try (
 			PreparedStatement pstmt = conn.prepareStatement(sql2)) {
 
@@ -318,17 +383,20 @@ public class Database {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-    	getCalisanlarFromDatabase();
-    	this.calisanlar=sirket.getCalisanlar();
+		calisanlar=sirket.getCalisanlar();
+		for (Calisan c : calisanlar) {
+			System.out.println("Calisan"+ "  "+ c.getName()+ "  "+ c.getProjectName());
+		}
+    	for(Calisan c:sirket.getCalisanlar()){
+    		updateCalisan(c.getId(),c);
+		}
+
     	int i =0;
+
     	for (Calisan c : calisanlar) {
-    		if (c.getProjectName()==null) {
-    			System.out.println("Calisan Ekleme"+c.getName()+i++);
-    			sirket.addEmptyWorker(c);
-    		
-    		}
+			System.out.println("Calisan"+ "  "+ c.getName()+ "  "+ c.getProjectName());
     	}
-    	
+
     	for (Proje p : sirket.getProjeler()) {
     		updateProject(p.getId());
     	}
@@ -339,11 +407,20 @@ public class Database {
     	}
     	for (Calisan c: temp_calisanlar) {
     		if (c.getProjectName()==null) {
-    			System.out.println("Calisan Yok etme"+c.getName());
+
     			deleteCalisanFromDatabase(c.getId()); }
     	}
     	getCalisanlarFromDatabase();
     	getProjectsFromDatabase();
+		try (
+				PreparedStatement pstmt = conn.prepareStatement(sql2)) {
+
+			pstmt.setString(1, projeAdi);
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
     }
 
 
@@ -396,6 +473,7 @@ yapacak.
 				System.out.println(ex.getMessage());
 			}
 		}
+
 		public void updateCalisanById(Calisan p){
 			// Update veya insert işlemi için Calisanin idsi ve Calisan Formundan Elde edilen bilgilerle oluşturulmuş çalışan nesnesi fonksiyona gönderililir verilen id'de çalışan varsa
 			//update eder yoksa insert eder
@@ -457,16 +535,16 @@ yapacak.
     	String SQL = "UPDATE projeler SET programci = ?, tasarimci = ?, analist = ? WHERE project_name =?";
     	Proje temp = null ;
     	for (Proje p : sirket.getProjeler()) {
-			System.out.println(p.getProjectName());
+
 			if (p.getId() == projectId) {
-				temp = p;	
+				temp = p;
 			}
-		}	
+		}
     	try (
-               
+
                 PreparedStatement statement = conn.prepareStatement(SQL);
     			) {
-    				
+
     			if (temp != null) {
                 statement.setInt(1, temp.getProgramci());
                 statement.setInt(2, temp.getTasarimci());
@@ -474,12 +552,12 @@ yapacak.
                 statement.setString(4, temp.getProjectName());
                 statement.executeUpdate();
     			}
-                
-            
+
+
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-    	
+
     }
 
     public ArrayList<Calisan> getCalisanlar() {
@@ -516,7 +594,7 @@ yapacak.
      */
     public static void main(String[] args) {
         Database app = new Database("company");
-        
+
         Programci p = new Programci("cayci ahmet",15000);
         Analist a = new Analist("analist",14000);
         Tasarimci t = new Tasarimci("tasarimci",13000);
@@ -540,7 +618,7 @@ yapacak.
         app.getSirket().addWorker(y1);
         app.getSirket().addWorker(y2);
 
-        app.insertProject(proje); 
+        app.insertProject(proje);
         app.insertProject(proje2);
         app.insertProject(proje3);
 		Proje temp=new Proje(/*1,*/"hacettepe",1,1,1,5,5,5,y);

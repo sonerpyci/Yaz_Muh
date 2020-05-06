@@ -27,6 +27,7 @@ public class Calisan {
         super();
         this.name = name;
         this.salary = salary;
+        this.id=0;
     }
 
 
